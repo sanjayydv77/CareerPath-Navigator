@@ -4,95 +4,910 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expert Mentorship - CareerPath Navigator</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
     <style>
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 100px 20px 40px; }
-        .hero-card { background: #fff; border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-        .hero-card h1 { margin: 0 0 10px 0; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
-        .mentor-card { background: #f8f9fa; border-radius: 14px; padding: 16px; }
-        .mentor-card h3 { margin: 0 0 6px 0; }
-        .badge { display: inline-block; background: #eef2ff; color: #667eea; border-radius: 999px; padding: 4px 10px; font-size: 12px; margin-right: 6px; }
-        .back-button { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.9); color: #667eea; border: none; padding: 12px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease; z-index: 1000; backdrop-filter: blur(10px); }
-        .back-button:hover { background: #fff; transform: translateY(-2px); }
-        @media (max-width: 768px) { .container { padding-top: 80px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: white;
+            color: #667eea;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+        }
+
+        .hero-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .filter-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .filter-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            color: #495057;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .mentors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .mentor-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .mentor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .mentor-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-right: 1rem;
+        }
+
+        .mentor-info h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .mentor-experience {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .mentor-specialties {
+            margin: 1rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .specialty-tag {
+            background: #eef2ff;
+            color: #667eea;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .mentor-description {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .mentor-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .mentor-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .session-duration {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .book-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .availability {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .busy {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding-top: 1rem;
+            }
+
+            .hero-section {
+                padding: 1.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .mentors-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .mentor-card {
+                padding: 1.5rem;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .mentor-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stat {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .back-btn {
+                top: 1rem;
+                left: 1rem;
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .mentors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .mentors-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
     </style>
-    <script>
-        function goBack(){ window.location.href = 'index.html'; }
-    </script>
 </head>
 <body>
-    <!-- Mobile-only Header/Navbar -->
-    <header class="mobile-only-header">
-        <div class="mobile-header-container">
-            <a href="index.html" class="mobile-logo"><i class="fas fa-compass"></i> CareerPath Navigator</a>
-            <button class="mobile-menu-toggle" aria-label="Open menu" title="Menu"><i class="fas fa-bars"></i></button>
-        </div>
-        <div id="mobileNavDropdown" class="mobile-nav-dropdown"></div>
-    </header>
-    <button class="back-button" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+    <a href="index.html" class="back-btn">←</a>
+    
     <div class="container">
-        <div class="hero-card">
-            <h1><i class="fas fa-chalkboard-teacher"></i> Expert Mentorship</h1>
-            <p>Connect with experienced mentors for 1:1 sessions, portfolio reviews, and career planning.</p>
-            <div class="grid">
-                <div class="mentor-card">
-                    <h3>Software Engineering Mentor</h3>
-                    <div>
-                        <span class="badge">Interviews</span>
-                        <span class="badge">System Design</span>
-                        <span class="badge">Career Roadmap</span>
+        <div class="hero-section">
+            <h1>🎯 Expert Mentorship Program</h1>
+            <p>Connect with industry professionals for personalized 1:1 guidance, career coaching, and skill development across various fields</p>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">Filter by Expertise</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterMentors('all')">All Mentors</button>
+                <button class="filter-btn" onclick="filterMentors('technology')">Technology</button>
+                <button class="filter-btn" onclick="filterMentors('business')">Business</button>
+                <button class="filter-btn" onclick="filterMentors('design')">Design</button>
+                <button class="filter-btn" onclick="filterMentors('healthcare')">Healthcare</button>
+                <button class="filter-btn" onclick="filterMentors('finance')">Finance</button>
+                <button class="filter-btn" onclick="filterMentors('education')">Education</button>
+            </div>
+        </div>
+
+        <div class="mentors-grid" id="mentorsGrid">
+            <!-- Software Development Mentor -->
+            <div class="mentor-card" data-category="technology">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">💻</div>
+                    <div class="mentor-info">
+                        <h3>Alex Chen</h3>
+                        <div class="mentor-experience">Senior Software Engineer @ Google</div>
                     </div>
-                    <p style="margin-top:8px; color:#555">Mock interviews, resume review, and guidance for breaking into top tech roles.</p>
                 </div>
-                <div class="mentor-card">
-                    <h3>UI/UX Design Mentor</h3>
-                    <div>
-                        <span class="badge">Portfolio</span>
-                        <span class="badge">Case Studies</span>
-                        <span class="badge">Figma</span>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">System Design</span>
+                    <span class="specialty-tag">Coding Interviews</span>
+                    <span class="specialty-tag">Career Growth</span>
+                    <span class="specialty-tag">Full-Stack</span>
+                </div>
+                <div class="mentor-description">
+                    Specializes in helping engineers crack FAANG interviews and advance their careers. Expert in system design, data structures, and technical leadership.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Years Exp</div>
                     </div>
-                    <p style="margin-top:8px; color:#555">Get detailed feedback on your portfolio and learn how to present case studies.</p>
-                </div>
-                <div class="mentor-card">
-                    <h3>Data Science Mentor</h3>
-                    <div>
-                        <span class="badge">ML</span>
-                        <span class="badge">Career Switch</span>
-                        <span class="badge">Projects</span>
+                    <div class="stat">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Sessions</div>
                     </div>
-                    <p style="margin-top:8px; color:#555">Project guidance, profile building, and paths to enter data roles.</p>
+                    <div class="stat">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
                 </div>
+                <div class="mentor-price">
+                    <div class="price">$80/session</div>
+                    <div class="session-duration">60 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('alex-chen')">Book Session</button>
+            </div>
+
+            <!-- Data Science Mentor -->
+            <div class="mentor-card" data-category="technology">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">📊</div>
+                    <div class="mentor-info">
+                        <h3>Dr. Sarah Williams</h3>
+                        <div class="mentor-experience">Lead Data Scientist @ Netflix</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Machine Learning</span>
+                    <span class="specialty-tag">Python</span>
+                    <span class="specialty-tag">Portfolio Review</span>
+                    <span class="specialty-tag">Career Switch</span>
+                </div>
+                <div class="mentor-description">
+                    Helps professionals transition into data science roles. Expert in ML algorithms, data visualization, and building impressive data science portfolios.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">8+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$90/session</div>
+                    <div class="session-duration">75 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('sarah-williams')">Book Session</button>
+            </div>
+
+            <!-- UX/UI Design Mentor -->
+            <div class="mentor-card" data-category="design">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">🎨</div>
+                    <div class="mentor-info">
+                        <h3>Maria Rodriguez</h3>
+                        <div class="mentor-experience">Senior UX Designer @ Airbnb</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Portfolio Review</span>
+                    <span class="specialty-tag">Case Studies</span>
+                    <span class="specialty-tag">Figma</span>
+                    <span class="specialty-tag">User Research</span>
+                </div>
+                <div class="mentor-description">
+                    Specializes in portfolio optimization and case study development. Helps designers land roles at top tech companies through strategic design thinking.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">6+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">180+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$75/session</div>
+                    <div class="session-duration">60 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('maria-rodriguez')">Book Session</button>
+            </div>
+
+            <!-- Business Strategy Mentor -->
+            <div class="mentor-card" data-category="business">
+                <div class="availability busy">Next available: Tomorrow</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">💼</div>
+                    <div class="mentor-info">
+                        <h3>James Patterson</h3>
+                        <div class="mentor-experience">VP Strategy @ McKinsey & Company</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">MBA Prep</span>
+                    <span class="specialty-tag">Consulting</span>
+                    <span class="specialty-tag">Strategy</span>
+                    <span class="specialty-tag">Leadership</span>
+                </div>
+                <div class="mentor-description">
+                    Former consultant with expertise in business strategy, case interviews, and MBA applications. Helps professionals break into top consulting firms.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">250+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$120/session</div>
+                    <div class="session-duration">90 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('james-patterson')">Book Session</button>
+            </div>
+
+            <!-- Healthcare Professional -->
+            <div class="mentor-card" data-category="healthcare">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">🏥</div>
+                    <div class="mentor-info">
+                        <h3>Dr. Emily Thompson</h3>
+                        <div class="mentor-experience">Emergency Medicine Physician</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Medical School</span>
+                    <span class="specialty-tag">Residency</span>
+                    <span class="specialty-tag">MCAT Prep</span>
+                    <span class="specialty-tag">Healthcare</span>
+                </div>
+                <div class="mentor-description">
+                    Guides pre-med students through medical school applications, MCAT preparation, and residency matching. Expert in healthcare career planning.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">7+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">120+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$85/session</div>
+                    <div class="session-duration">60 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('emily-thompson')">Book Session</button>
+            </div>
+
+            <!-- Financial Advisor -->
+            <div class="mentor-card" data-category="finance">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">💰</div>
+                    <div class="mentor-info">
+                        <h3>Michael Chang</h3>
+                        <div class="mentor-experience">Investment Banking VP @ Goldman Sachs</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Investment Banking</span>
+                    <span class="specialty-tag">Finance Career</span>
+                    <span class="specialty-tag">CFA Prep</span>
+                    <span class="specialty-tag">Networking</span>
+                </div>
+                <div class="mentor-description">
+                    Specializes in finance career transitions, investment banking interviews, and financial modeling. Helps students break into Wall Street.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">9+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">190+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.7</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$100/session</div>
+                    <div class="session-duration">75 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('michael-chang')">Book Session</button>
+            </div>
+
+            <!-- Product Manager -->
+            <div class="mentor-card" data-category="technology">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">📱</div>
+                    <div class="mentor-info">
+                        <h3>Lisa Park</h3>
+                        <div class="mentor-experience">Senior PM @ Meta</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Product Strategy</span>
+                    <span class="specialty-tag">PM Interviews</span>
+                    <span class="specialty-tag">Roadmapping</span>
+                    <span class="specialty-tag">Analytics</span>
+                </div>
+                <div class="mentor-description">
+                    Expert in product management career transitions and interview preparation. Helps professionals break into PM roles at top tech companies.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">6+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">160+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$95/session</div>
+                    <div class="session-duration">60 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('lisa-park')">Book Session</button>
+            </div>
+
+            <!-- Marketing Professional -->
+            <div class="mentor-card" data-category="business">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">📈</div>
+                    <div class="mentor-info">
+                        <h3>David Kumar</h3>
+                        <div class="mentor-experience">Marketing Director @ HubSpot</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Digital Marketing</span>
+                    <span class="specialty-tag">Brand Strategy</span>
+                    <span class="specialty-tag">Growth Hacking</span>
+                    <span class="specialty-tag">Content</span>
+                </div>
+                <div class="mentor-description">
+                    Specializes in digital marketing strategies, brand building, and growth marketing. Helps professionals advance in marketing careers.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">8+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">140+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.7</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$70/session</div>
+                    <div class="session-duration">60 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('david-kumar')">Book Session</button>
+            </div>
+
+            <!-- Cybersecurity Expert -->
+            <div class="mentor-card" data-category="technology">
+                <div class="availability busy">Next available: 2 days</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">🔒</div>
+                    <div class="mentor-info">
+                        <h3>Jennifer Lee</h3>
+                        <div class="mentor-experience">Cybersecurity Architect @ Amazon</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Cybersecurity</span>
+                    <span class="specialty-tag">Ethical Hacking</span>
+                    <span class="specialty-tag">Certifications</span>
+                    <span class="specialty-tag">Cloud Security</span>
+                </div>
+                <div class="mentor-description">
+                    Expert in cybersecurity career paths, certifications (CISSP, CEH), and security architecture. Helps professionals enter the cybersecurity field.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">130+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$110/session</div>
+                    <div class="session-duration">75 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('jennifer-lee')">Book Session</button>
+            </div>
+
+            <!-- Education Professional -->
+            <div class="mentor-card" data-category="education">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">📚</div>
+                    <div class="mentor-info">
+                        <h3>Prof. Robert Davis</h3>
+                        <div class="mentor-experience">Professor @ Stanford University</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">PhD Guidance</span>
+                    <span class="specialty-tag">Research</span>
+                    <span class="specialty-tag">Academia</span>
+                    <span class="specialty-tag">Publishing</span>
+                </div>
+                <div class="mentor-description">
+                    Guides students through PhD applications, research methodology, and academic career planning. Expert in transitioning from industry to academia.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$90/session</div>
+                    <div class="session-duration">90 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('robert-davis')">Book Session</button>
+            </div>
+
+            <!-- Graphic Designer -->
+            <div class="mentor-card" data-category="design">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">🎭</div>
+                    <div class="mentor-info">
+                        <h3>Amanda Foster</h3>
+                        <div class="mentor-experience">Creative Director @ Adobe</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Graphic Design</span>
+                    <span class="specialty-tag">Branding</span>
+                    <span class="specialty-tag">Creative Suite</span>
+                    <span class="specialty-tag">Freelancing</span>
+                </div>
+                <div class="mentor-description">
+                    Specializes in graphic design career development, brand identity creation, and building a successful freelance design business.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">170+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.8</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$65/session</div>
+                    <div class="session-duration">60 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('amanda-foster')">Book Session</button>
+            </div>
+
+            <!-- Startup Entrepreneur -->
+            <div class="mentor-card" data-category="business">
+                <div class="availability available">Available</div>
+                <div class="mentor-header">
+                    <div class="mentor-icon">🚀</div>
+                    <div class="mentor-info">
+                        <h3>Ryan Mitchell</h3>
+                        <div class="mentor-experience">Serial Entrepreneur & Startup Advisor</div>
+                    </div>
+                </div>
+                <div class="mentor-specialties">
+                    <span class="specialty-tag">Startup Strategy</span>
+                    <span class="specialty-tag">Fundraising</span>
+                    <span class="specialty-tag">Business Model</span>
+                    <span class="specialty-tag">MVP Development</span>
+                </div>
+                <div class="mentor-description">
+                    Founded 3 successful startups with 2 exits. Helps aspiring entrepreneurs validate ideas, build MVPs, and navigate the startup ecosystem.
+                </div>
+                <div class="mentor-stats">
+                    <div class="stat">
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">Years Exp</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+                <div class="mentor-price">
+                    <div class="price">$150/session</div>
+                    <div class="session-duration">90 min session</div>
+                </div>
+                <button class="book-btn" onclick="bookSession('ryan-mitchell')">Book Session</button>
             </div>
         </div>
     </div>
+
     <script>
-        (function(){
-            const dropdown=document.getElementById('mobileNavDropdown');
-            const toggle=document.querySelector('.mobile-menu-toggle');
-            function closeMenu(){ if(!dropdown) return; dropdown.classList.remove('active'); if(toggle) toggle.innerHTML='<i class="fas fa-bars"></i>'; }
-            if (toggle && dropdown){
-                toggle.addEventListener('click', function(){
-                    if (dropdown.classList.contains('active')){ closeMenu(); return; }
-                    dropdown.innerHTML = '\
-                        <ul class="mobile-menu-list">\
-                            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>\
-                            <li><a href="assessment.html"><i class="fas fa-clipboard-check"></i> Assessment</a></li>\
-                            <li><a href="streams.html"><i class="fas fa-stream"></i> Streams</a></li>\
-                            <li><a href="colleges.html"><i class="fas fa-university"></i> Colleges</a></li>\
-                            <li><a href="jobs.html"><i class="fas fa-briefcase"></i> Jobs</a></li>\
-                        </ul>';
-                    dropdown.classList.add('active');
-                    toggle.innerHTML = '<i class="fas fa-times"></i>';
-                    dropdown.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeMenu));
-                });
-                window.addEventListener('resize', function(){ if (window.innerWidth > 768) closeMenu(); });
-            }
-        })();
+        function filterMentors(category) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter mentor cards
+            const mentorCards = document.querySelectorAll('.mentor-card');
+            mentorCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        function bookSession(mentorId) {
+            // Simulate booking process
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Processing...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            
+            setTimeout(() => {
+                alert(`Booking request sent! You will receive a confirmation email shortly for your session with ${mentorId.replace('-', ' ')}.`);
+                btn.textContent = 'Booking Sent ✓';
+                btn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                }, 3000);
+            }, 2000);
+        }
+
+        // Add smooth transitions for mentor cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const mentorCards = document.querySelectorAll('.mentor-card');
+            mentorCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
     </script>
 </body>
 </html>
-
-
