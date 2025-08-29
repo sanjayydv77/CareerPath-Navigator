@@ -113,9 +113,9 @@ code .
 - **Education:** 3rd Year CSE B.Tech Student
 - **Location:** Indore, Madhya Pradesh, India
 - **Email:** sanjuydv5357@gmail.com
-- **LinkedIn:** [sanjayydv77](https://www.linkedin.com/in/sanjayydv77/)
+- **LinkedIn:** [sanjuydv7](https://www.linkedin.com/in/sanjuydv7/)
 - **GitHub:** [sanjayydv77](https://github.com/sanjayydv77)
-- **Instagram:** [sanjayydv77](https://www.instagram.com/sanjayydv77/)
+- **Instagram:** [sanjuydv_7](https://www.instagram.com/sanjuydv_7/)
 
 ## 🎓 Academic Project
 
