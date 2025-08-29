@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Mentorship - CareerPath Navigator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 100px 20px 40px; }
+        .hero-card { background: #fff; border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+        .hero-card h1 { margin: 0 0 10px 0; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+        .mentor-card { background: #f8f9fa; border-radius: 14px; padding: 16px; }
+        .mentor-card h3 { margin: 0 0 6px 0; }
+        .badge { display: inline-block; background: #eef2ff; color: #667eea; border-radius: 999px; padding: 4px 10px; font-size: 12px; margin-right: 6px; }
+        .back-button { position: fixed; top: 20px; left: 20px; background: rgba(255,255,255,0.9); color: #667eea; border: none; padding: 12px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s ease; z-index: 1000; backdrop-filter: blur(10px); }
+        .back-button:hover { background: #fff; transform: translateY(-2px); }
+        @media (max-width: 768px) { .container { padding-top: 80px; } }
+    </style>
+    <script>
+        function goBack(){ window.location.href = 'index.html'; }
+    </script>
+</head>
+<body>
+    <!-- Mobile-only Header/Navbar -->
+    <header class="mobile-only-header">
+        <div class="mobile-header-container">
+            <a href="index.html" class="mobile-logo"><i class="fas fa-compass"></i> CareerPath Navigator</a>
+            <button class="mobile-menu-toggle" aria-label="Open menu" title="Menu"><i class="fas fa-bars"></i></button>
+        </div>
+        <div id="mobileNavDropdown" class="mobile-nav-dropdown"></div>
+    </header>
+    <button class="back-button" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+    <div class="container">
+        <div class="hero-card">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Expert Mentorship</h1>
+            <p>Connect with experienced mentors for 1:1 sessions, portfolio reviews, and career planning.</p>
+            <div class="grid">
+                <div class="mentor-card">
+                    <h3>Software Engineering Mentor</h3>
+                    <div>
+                        <span class="badge">Interviews</span>
+                        <span class="badge">System Design</span>
+                        <span class="badge">Career Roadmap</span>
+                    </div>
+                    <p style="margin-top:8px; color:#555">Mock interviews, resume review, and guidance for breaking into top tech roles.</p>
+                </div>
+                <div class="mentor-card">
+                    <h3>UI/UX Design Mentor</h3>
+                    <div>
+                        <span class="badge">Portfolio</span>
+                        <span class="badge">Case Studies</span>
+                        <span class="badge">Figma</span>
+                    </div>
+                    <p style="margin-top:8px; color:#555">Get detailed feedback on your portfolio and learn how to present case studies.</p>
+                </div>
+                <div class="mentor-card">
+                    <h3>Data Science Mentor</h3>
+                    <div>
+                        <span class="badge">ML</span>
+                        <span class="badge">Career Switch</span>
+                        <span class="badge">Projects</span>
+                    </div>
+                    <p style="margin-top:8px; color:#555">Project guidance, profile building, and paths to enter data roles.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function(){
+            const dropdown=document.getElementById('mobileNavDropdown');
+            const toggle=document.querySelector('.mobile-menu-toggle');
+            function closeMenu(){ if(!dropdown) return; dropdown.classList.remove('active'); if(toggle) toggle.innerHTML='<i class="fas fa-bars"></i>'; }
+            if (toggle && dropdown){
+                toggle.addEventListener('click', function(){
+                    if (dropdown.classList.contains('active')){ closeMenu(); return; }
+                    dropdown.innerHTML = '\
+                        <ul class="mobile-menu-list">\
+                            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>\
+                            <li><a href="assessment.html"><i class="fas fa-clipboard-check"></i> Assessment</a></li>\
+                            <li><a href="streams.html"><i class="fas fa-stream"></i> Streams</a></li>\
+                            <li><a href="colleges.html"><i class="fas fa-university"></i> Colleges</a></li>\
+                            <li><a href="jobs.html"><i class="fas fa-briefcase"></i> Jobs</a></li>\
+                        </ul>';
+                    dropdown.classList.add('active');
+                    toggle.innerHTML = '<i class="fas fa-times"></i>';
+                    dropdown.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeMenu));
+                });
+                window.addEventListener('resize', function(){ if (window.innerWidth > 768) closeMenu(); });
+            }
+        })();
+    </script>
+</body>
+</html>
+
+

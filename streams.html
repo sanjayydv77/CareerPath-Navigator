@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Streams - CareerPath Navigator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .search-filter {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            min-width: 250px;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-tab:hover {
+            background: #e9ecef;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stream-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeInUp 1s ease-out both;
+        }
+
+        .stream-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .stream-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stream-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .stream-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stream-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stream-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .stream-content {
+            padding: 20px;
+        }
+
+        .stream-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .stream-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #555;
+        }
+
+        .stream-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: #f0f4f8;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .stream-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .eligibility-checker {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .checker-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .streams-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .filter-tabs {
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> Career Streams Explorer</h1>
+            <p>Discover your perfect career path from 15+ professional streams</p>
+        </div>
+
+        <div class="eligibility-checker">
+            <div class="checker-title">
+                <i class="fas fa-check-circle"></i> Quick Eligibility Checker
+            </div>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; min-width: 150px;">
+                    <label class="form-label">Education Level</label>
+                    <select class="form-select" id="education-level">
+                        <option value="">Select Level</option>
+                        <option value="10th">10th Pass</option>
+                        <option value="12th-science">12th Science</option>
+                        <option value="12th-commerce">12th Commerce</option>
+                        <option value="12th-arts">12th Arts</option>
+                        <option value="graduate">Graduate</option>
+                        <option value="postgraduate">Post Graduate</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 150px;">
+                    <label class="form-label">Interest Area</label>
+                    <select class="form-select" id="interest-area">
+                        <option value="">Select Interest</option>
+                        <option value="technology">Technology</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="business">Business</option>
+                        <option value="creative">Creative Arts</option>
+                        <option value="science">Science</option>
+                        <option value="social">Social Service</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="checkEligibility()" style="align-self: end;">
+                    <i class="fas fa-search"></i> Check
+                </button>
+            </div>
+        </div>
+
+        <div class="search-filter">
+            <div class="search-box">
+                <input type="text" class="search-input" id="search-streams" placeholder="🔍 Search career streams, skills, or job roles...">
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-category="all">All Streams</button>
+                <button class="filter-tab" data-category="technology">Technology</button>
+                <button class="filter-tab" data-category="healthcare">Healthcare</button>
+                <button class="filter-tab" data-category="business">Business</button>
+                <button class="filter-tab" data-category="creative">Creative</button>
+                <button class="filter-tab" data-category="science">Science</button>
+                <button class="filter-tab" data-category="social">Social</button>
+            </div>
+        </div>
+
+        <div class="streams-grid" id="streams-container">
+            <!-- Stream cards will be dynamically generated here -->
+        </div>
+
+        <div class="no-results" id="no-results" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>No matching streams found</h3>
+            <p>Try adjusting your search criteria or filters</p>
+        </div>
+    </div>
+
+    <!-- Stream Details Modal -->
+    <div class="modal" id="stream-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-body">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Career Streams Data
+        const careerStreams = [
+            {
+                id: 'engineering',
+                title: 'Engineering & Technology',
+                subtitle: '50+ Specializations',
+                icon: 'fas fa-cogs',
+                category: 'technology',
+                description: 'Design, build, and innovate solutions for tomorrow\'s challenges across multiple engineering disciplines.',
+                eligibility: ['12th-science'],
+                jobMarket: '4.2M+ jobs',
+                avgSalary: '₹6-25 LPA',
+                growth: '+12% annually',
+                tags: ['Problem Solving', 'Innovation', 'Technical Skills', 'High Demand'],
+                details: {
+                    overview: 'Engineering is one of the most sought-after career streams, offering diverse specializations from traditional mechanical and civil engineering to cutting-edge fields like AI and robotics.',
+                    specializations: ['Computer Science', 'Mechanical', 'Civil', 'Electrical', 'Electronics', 'Aerospace', 'Biomedical', 'Chemical', 'Environmental'],
+                    skills: ['Analytical Thinking', 'Problem Solving', 'Mathematics', 'Physics', 'Programming', 'Design Thinking'],
+                    colleges: ['IITs', 'NITs', 'IIITs', 'State Engineering Colleges', 'Private Universities'],
+                    careers: ['Software Engineer', 'Mechanical Engineer', 'Civil Engineer', 'Data Scientist', 'Robotics Engineer']
+                }
+            },
+            {
+                id: 'medical',
+                title: 'Medical & Healthcare',
+                subtitle: '20+ Specializations',
+                icon: 'fas fa-stethoscope',
+                category: 'healthcare',
+                description: 'Dedicate your life to healing, caring, and advancing human health through various medical specializations.',
+                eligibility: ['12th-science'],
+                jobMarket: '2.8M+ jobs',
+                avgSalary: '₹8-50 LPA',
+                growth: '+15% annually',
+                tags: ['Life Saving', 'Respect', 'High Income', 'Job Security'],
+                details: {
+                    overview: 'Medical field offers the opportunity to save lives and make a meaningful impact on society. From general practice to specialized surgeries, the field is vast and rewarding.',
+                    specializations: ['General Medicine', 'Surgery', 'Pediatrics', 'Cardiology', 'Neurology', 'Dermatology', 'Psychiatry', 'Radiology', 'Anesthesiology'],
+                    skills: ['Empathy', 'Attention to Detail', 'Decision Making', 'Communication', 'Stress Management', 'Continuous Learning'],
+                    colleges: ['AIIMS', 'JIPMER', 'CMC Vellore', 'MAMC', 'Government Medical Colleges', 'Private Medical Colleges'],
+                    careers: ['Doctor', 'Surgeon', 'Specialist Physician', 'Medical Researcher', 'Healthcare Administrator']
+                }
+            },
+            {
+                id: 'business',
+                title: 'Business & Management',
+                subtitle: '15+ Domains',
+                icon: 'fas fa-briefcase',
+                category: 'business',
+                description: 'Lead organizations, make strategic decisions, and drive business growth in the dynamic corporate world.',
+                eligibility: ['12th-commerce', '12th-science', '12th-arts', 'graduate'],
+                jobMarket: '3.5M+ jobs',
+                avgSalary: '₹4-40 LPA',
+                growth: '+10% annually',
+                tags: ['Leadership', 'Strategy', 'Growth', 'Entrepreneurship'],
+                details: {
+                    overview: 'Business management encompasses various functions from finance and marketing to operations and strategy. It offers excellent growth opportunities and the chance to lead teams.',
+                    specializations: ['Finance', 'Marketing', 'Human Resources', 'Operations', 'Strategy', 'Consulting', 'Entrepreneurship', 'International Business'],
+                    skills: ['Leadership', 'Communication', 'Strategic Thinking', 'Financial Analysis', 'Team Management', 'Negotiation'],
+                    colleges: ['IIMs', 'ISB', 'FMS Delhi', 'XLRI', 'SPJIMR', 'MDI Gurgaon', 'IITs (MBA)', 'State Business Schools'],
+                    careers: ['Business Analyst', 'Marketing Manager', 'Financial Analyst', 'HR Manager', 'Consultant', 'Entrepreneur']
+                }
+            },
+            {
+                id: 'arts-design',
+                title: 'Arts & Creative Design',
+                subtitle: '25+ Creative Fields',
+                icon: 'fas fa-palette',
+                category: 'creative',
+                description: 'Express creativity through various art forms, design solutions, and create visually stunning experiences.',
+                eligibility: ['10th', '12th-arts', '12th-commerce', '12th-science'],
+                jobMarket: '1.8M+ jobs',
+                avgSalary: '₹3-20 LPA',
+                growth: '+8% annually',
+                tags: ['Creativity', 'Self Expression', 'Flexibility', 'Innovation'],
+                details: {
+                    overview: 'Creative arts and design fields are experiencing rapid growth with digital transformation. From traditional fine arts to digital design, opportunities are expanding.',
+                    specializations: ['Graphic Design', 'UI/UX Design', 'Fashion Design', 'Interior Design', 'Animation', 'Fine Arts', 'Photography', 'Film Making'],
+                    skills: ['Creativity', 'Visual Thinking', 'Software Proficiency', 'Attention to Detail', 'Communication', 'Trend Awareness'],
+                    colleges: ['NID', 'NIFT', 'Srishti', 'Pearl Academy', 'JJ School of Arts', 'Lovely Professional University'],
+                    careers: ['Graphic Designer', 'UI/UX Designer', 'Fashion Designer', 'Animator', 'Photographer', 'Art Director']
+                }
+            },
+            {
+                id: 'science-research',
+                title: 'Science & Research',
+                subtitle: '30+ Research Areas',
+                icon: 'fas fa-microscope',
+                category: 'science',
+                description: 'Advance human knowledge through scientific research, discovery, and innovation in various fields.',
+                eligibility: ['12th-science', '12th-arts', '12th-commerce'],
+                jobMarket: '600K+ jobs',
+                avgSalary: '₹4-20 LPA',
+                growth: '+5% annually',
+                tags: ['Honor', 'Service', 'Security', 'Leadership'],
+                details: {
+                    overview: 'Defense services offer the honor of serving the nation, with opportunities in army, navy, air force, and various security organizations.',
+                    specializations: ['Army', 'Navy', 'Air Force', 'Paramilitary Forces', 'Intelligence Services', 'Defense Research'],
+                    skills: ['Physical Fitness', 'Leadership', 'Discipline', 'Strategic Thinking', 'Teamwork', 'Courage'],
+                    colleges: ['NDA', 'IMA', 'Naval Academy', 'Air Force Academy', 'OTA Chennai'],
+                    careers: ['Army Officer', 'Naval Officer', 'Air Force Officer', 'Security Officer', 'Defense Researcher']
+                }
+            },
+            {
+                id: 'psychology',
+                title: 'Psychology & Mental Health',
+                subtitle: '10+ Therapy Areas',
+                icon: 'fas fa-brain',
+                category: 'healthcare',
+                description: 'Help people overcome mental health challenges and improve psychological well-being.',
+                eligibility: ['12th-arts', '12th-science', 'graduate'],
+                jobMarket: '400K+ jobs',
+                avgSalary: '₹3-18 LPA',
+                growth: '+14% annually',
+                tags: ['Helping Others', 'Growing Field', 'Meaningful', 'Flexibility'],
+                details: {
+                    overview: 'Mental health awareness is growing rapidly, creating numerous opportunities for psychologists and mental health professionals.',
+                    specializations: ['Clinical Psychology', 'Counseling Psychology', 'School Psychology', 'Forensic Psychology', 'Neuropsychology'],
+                    skills: ['Empathy', 'Active Listening', 'Communication', 'Analytical Thinking', 'Patience', 'Ethics'],
+                    colleges: ['Psychology Departments', 'Specialized Psychology Institutes', 'Medical Colleges', 'Universities'],
+                    careers: ['Clinical Psychologist', 'Counselor', 'School Psychologist', 'Therapist', 'Researcher']
+                }
+            },
+            {
+                id: 'sports',
+                title: 'Sports & Fitness',
+                subtitle: '15+ Sports Disciplines',
+                icon: 'fas fa-running',
+                category: 'creative',
+                description: 'Excel in athletic performance, fitness training, and sports management across various disciplines.',
+                eligibility: ['10th', '12th-arts', '12th-science'],
+                jobMarket: '500K+ jobs',
+                avgSalary: '₹2-50 LPA',
+                growth: '+10% annually',
+                tags: ['Passion', 'Health', 'Competition', 'Recognition'],
+                details: {
+                    overview: 'Sports industry is expanding with fitness awareness, professional leagues, and sports technology creating diverse career opportunities.',
+                    specializations: ['Professional Sports', 'Sports Management', 'Fitness Training', 'Sports Medicine', 'Sports Journalism', 'Sports Psychology'],
+                    skills: ['Physical Fitness', 'Discipline', 'Teamwork', 'Leadership', 'Competition', 'Training'],
+                    colleges: ['Sports Universities', 'Sports Colleges', 'SAI Centers', 'Private Sports Academies'],
+                    careers: ['Professional Athlete', 'Sports Coach', 'Fitness Trainer', 'Sports Manager', 'Sports Journalist']
+                }
+            },
+            {
+                id: 'social-work',
+                title: 'Social Work & NGO',
+                subtitle: 'Community Development',
+                icon: 'fas fa-hands-helping',
+                category: 'social',
+                description: 'Make a positive impact on society through community development and social welfare programs.',
+                eligibility: ['12th-arts', '12th-science', 'graduate'],
+                jobMarket: '300K+ jobs',
+                avgSalary: '₹2-8 LPA',
+                growth: '+6% annually',
+                tags: ['Social Impact', 'Fulfillment', 'Community', 'Change'],
+                details: {
+                    overview: 'Social work addresses societal challenges and helps vulnerable populations, offering meaningful career opportunities in various sectors.',
+                    specializations: ['Child Welfare', 'Community Development', 'Healthcare Social Work', 'School Social Work', 'Mental Health', 'Disaster Management'],
+                    skills: ['Empathy', 'Communication', 'Problem Solving', 'Advocacy', 'Cultural Sensitivity', 'Organization'],
+                    colleges: ['Schools of Social Work', 'Universities with Social Work Departments', 'TISS', 'Delhi School of Social Work'],
+                    careers: ['Social Worker', 'NGO Manager', 'Community Organizer', 'Program Coordinator', 'Policy Analyst']
+                }
+            }
+        ];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayStreams(careerStreams);
+            initializeFilters();
+            initializeSearch();
+            
+            // Add staggered animation delay
+            setTimeout(() => {
+                document.querySelectorAll('.stream-card').forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+            }, 100);
+        });
+
+        function displayStreams(streams) {
+            const container = document.getElementById('streams-container');
+            const noResults = document.getElementById('no-results');
+            
+            if (streams.length === 0) {
+                container.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            container.innerHTML = streams.map(stream => `
+                <div class="stream-card" data-category="${stream.category}" onclick="openStreamDetails('${stream.id}')">
+                    <div class="stream-header">
+                        <i class="${stream.icon} stream-icon"></i>
+                        <div class="stream-title">${stream.title}</div>
+                        <div class="stream-subtitle">${stream.subtitle}</div>
+                    </div>
+                    <div class="stream-content">
+                        <div class="stream-description">${stream.description}</div>
+                        <div class="stream-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-briefcase"></i>
+                                <span>${stream.jobMarket}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <span>${stream.avgSalary}</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>${stream.growth}</span>
+                            </div>
+                        </div>
+                        <div class="stream-tags">
+                            ${stream.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="stream-actions">
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); openStreamDetails('${stream.id}')">
+                                <i class="fas fa-info-circle"></i> View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function initializeFilters() {
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    const category = tab.dataset.category;
+                    const filteredStreams = category === 'all' 
+                        ? careerStreams 
+                        : careerStreams.filter(stream => stream.category === category);
+                    
+                    displayStreams(filteredStreams);
+                });
+            });
+        }
+
+        function initializeSearch() {
+            const searchInput = document.getElementById('search-streams');
+            
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                
+                const filteredStreams = careerStreams.filter(stream => 
+                    stream.title.toLowerCase().includes(query) ||
+                    stream.description.toLowerCase().includes(query) ||
+                    stream.tags.some(tag => tag.toLowerCase().includes(query)) ||
+                    (stream.details && stream.details.specializations && 
+                     stream.details.specializations.some(spec => spec.toLowerCase().includes(query)))
+                );
+                
+                displayStreams(filteredStreams);
+            });
+        }
+
+        function checkEligibility() {
+            const education = document.getElementById('education-level').value;
+            const interest = document.getElementById('interest-area').value;
+            
+            if (!education || !interest) {
+                alert('Please select both education level and interest area');
+                return;
+            }
+            
+            const eligibleStreams = careerStreams.filter(stream => 
+                stream.eligibility.includes(education) && 
+                (stream.category === interest || interest === '')
+            );
+            
+            // Update active filter tab
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            filterTabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.category === interest) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            displayStreams(eligibleStreams);
+            
+            // Show notification
+            showNotification(`Found ${eligibleStreams.length} streams matching your criteria!`, 'success');
+        }
+
+        function openStreamDetails(streamId) {
+            const stream = careerStreams.find(s => s.id === streamId);
+            if (!stream) return;
+            
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <i class="${stream.icon}" style="font-size: 3rem; color: #667eea; margin-bottom: 10px;"></i>
+                    <h2 style="color: #333; margin-bottom: 5px;">${stream.title}</h2>
+                    <p style="color: #666;">${stream.subtitle}</p>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">
+                        <i class="fas fa-info-circle" style="color: #667eea;"></i> Overview
+                    </h3>
+                    <p style="line-height: 1.6; color: #555;">${stream.details.overview}</p>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">
+                        <i class="fas fa-list" style="color: #667eea;"></i> Specializations
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${stream.details.specializations.map(spec => 
+                            `<span style="background: #f0f4f8; color: #667eea; padding: 5px 12px; border-radius: 15px; font-size: 0.9rem;">${spec}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">
+                        <i class="fas fa-cog" style="color: #667eea;"></i> Required Skills
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${stream.details.skills.map(skill => 
+                            `<span style="background: #e8f4f8; color: #4ecdc4; padding: 5px 12px; border-radius: 15px; font-size: 0.9rem;">${skill}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">
+                        <i class="fas fa-university" style="color: #667eea;"></i> Top Colleges/Institutes
+                    </h3>
+                    <ul style="color: #555; line-height: 1.8; padding-left: 20px;">
+                        ${stream.details.colleges.map(college => `<li>${college}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">
+                        <i class="fas fa-briefcase" style="color: #667eea;"></i> Career Opportunities
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        ${stream.details.careers.map(career => 
+                            `<div style="background: #f8f9fa; padding: 10px; border-radius: 8px; text-align: center; color: #555;">${career}</div>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 12px; margin-top: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; text-align: center;">
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${stream.jobMarket}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Job Market</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${stream.avgSalary}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Avg Salary</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">${stream.growth}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Growth Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button class="btn btn-primary" onclick="startCareerPath('${streamId}')" style="margin-right: 10px;">
+                        <i class="fas fa-rocket"></i> Start This Career Path
+                    </button>
+                    <button class="btn btn-outline" onclick="downloadGuide('${streamId}')">
+                        <i class="fas fa-download"></i> Download Guide
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('stream-modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('stream-modal').classList.remove('show');
+        }
+
+        function startCareerPath(streamId) {
+            showNotification(`Great choice! Starting your ${careerStreams.find(s => s.id === streamId).title} journey...`, 'success');
+            closeModal();
+            // Here you can redirect to a detailed career planning page
+        }
+
+        function downloadGuide(streamId) {
+            const stream = careerStreams.find(s => s.id === streamId);
+            showNotification(`Career guide for ${stream.title} will be emailed to you shortly!`, 'info');
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #4ecdc4, #44a08d)' : 
+                            type === 'error' ? 'linear-gradient(135deg, #ff6b6b, #ee5a24)' : 
+                            'linear-gradient(135deg, #667eea, #764ba2)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                z-index: 3000;
+                animation: slideInRight 0.3s ease-out;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-in forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('stream-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'stream-modal') {
+                closeModal();
+            }
+        });
+
+        // Add CSS animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('🎯 Career Streams Explorer Loaded Successfully!');
+        console.log(`📊 Displaying ${careerStreams.length} career streams`);
+    </script>
+</body>
+</html> 
