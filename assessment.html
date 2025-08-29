@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Assessment - Career Counseling Platform</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
     <style>
         * {
             margin: 0;
@@ -17,11 +15,11 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 2rem 1rem;
+            padding: 1rem;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -34,6 +32,35 @@
             color: white;
             padding: 2rem;
             text-align: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: white;
+            color: #667eea;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .header h1 {
@@ -54,33 +81,34 @@
 
         .progress-bar {
             width: 100%;
-            height: 10px;
+            height: 12px;
             background: #e9ecef;
-            border-radius: 5px;
+            border-radius: 6px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
-            width: 10%;
-            transition: width 0.3s ease;
+            width: 20%;
+            transition: width 0.4s ease;
         }
 
         .progress-text {
             text-align: center;
-            margin-top: 0.5rem;
+            margin-top: 0.8rem;
             color: #666;
             font-weight: 500;
+            font-size: 1rem;
         }
 
         .content {
-            padding: 2rem;
+            padding: 2.5rem 2rem;
         }
 
         .question-container {
             display: none;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.6s ease;
         }
 
         .question-container.active {
@@ -88,59 +116,70 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .question {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .question h3 {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             color: #2c3e50;
-            margin-bottom: 1rem;
-            line-height: 1.4;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            text-align: center;
         }
 
         .options {
             display: grid;
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .option {
             background: #f8f9fa;
             border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 1rem;
+            border-radius: 12px;
+            padding: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            position: relative;
         }
 
         .option:hover {
             background: #e3f2fd;
             border-color: #3498db;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.2);
         }
 
         .option.selected {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
         .option input[type="radio"] {
-            margin-right: 1rem;
-            transform: scale(1.2);
+            margin-right: 1.2rem;
+            transform: scale(1.3);
+            accent-color: #667eea;
+        }
+
+        .option span {
+            font-size: 1.05rem;
+            font-weight: 500;
         }
 
         .navigation {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
             padding-top: 2rem;
             border-top: 1px solid #e9ecef;
         }
@@ -149,17 +188,17 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 25px;
-            font-size: 1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
         .btn:disabled {
@@ -173,692 +212,282 @@
             background: #6c757d;
         }
 
+        .btn-secondary:hover {
+            box-shadow: 0 8px 20px rgba(108, 117, 125, 0.4);
+        }
+
         .result-container {
             display: none;
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
         }
 
         .result-container.active {
             display: block;
+            animation: fadeIn 0.6s ease;
         }
 
         .result-icon {
-            font-size: 4rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .result-container h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
             margin-bottom: 1rem;
+        }
+
+        .result-container > p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
         }
 
         .career-recommendations {
             display: grid;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 1.5rem;
+            margin: 2.5rem 0;
             text-align: left;
         }
 
         .career-card {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 2rem;
             position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .career-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #667eea;
         }
 
         .career-card h4 {
             color: #2c3e50;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
         }
 
         .career-card p {
             color: #666;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 1rem;
         }
 
-        .perfect-match {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            color: white;
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-        }
-        
-        .perfect-match h3 {
-            font-size: 2rem;
-            margin: 1rem 0;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .perfect-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-top: 1rem;
-        }
-        
-        .match-badge {
-            background-color: rgba(255,255,255,0.25);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 1rem;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.3);
+        .career-list {
+            color: #495057;
+            font-weight: 500;
+            font-size: 1rem;
         }
 
         .match-percentage {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
         .home-btn {
-            margin-top: 2rem;
-            background: #28a745;
+            margin-top: 2.5rem;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
         }
 
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.9);
-            color: #667eea;
-            border: none;
-            padding: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+        .home-btn:hover {
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
         }
 
-        .back-button:hover {
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        /* ========================================
-           COMPREHENSIVE RESPONSIVE DESIGN SYSTEM
-           ======================================== */
-
-        /* Extra Small Devices (320px - 480px) */
-        @media (max-width: 480px) {
+        /* Mobile Devices (320px - 768px) */
+        @media (max-width: 768px) {
             body {
-                padding: 1rem 0.5rem;
+                padding: 0.5rem;
             }
-            
-            .container {
-                margin: 0;
-                border-radius: 15px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            }
-            
+
             .header {
                 padding: 1.5rem 1rem;
             }
-            
+
+            .back-btn {
+                top: 1rem;
+                left: 1rem;
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+
             .header h1 {
                 font-size: 1.8rem;
-                margin-bottom: 0.3rem;
             }
-            
+
             .header p {
-                font-size: 0.95rem;
+                font-size: 1rem;
             }
-            
+
             .progress-container {
                 padding: 0.8rem 1rem;
             }
-            
-            .progress-bar {
-                height: 8px;
-            }
-            
-            .progress-text {
-                font-size: 0.9rem;
-                margin-top: 0.3rem;
-            }
-            
+
             .content {
-                padding: 1rem;
+                padding: 1.5rem 1rem;
             }
-            
+
             .question h3 {
                 font-size: 1.2rem;
-                margin-bottom: 1rem;
-                line-height: 1.3;
+                text-align: left;
             }
-            
-            .options {
-                gap: 0.8rem;
-            }
-            
+
             .option {
                 padding: 1rem;
-                font-size: 0.9rem;
-                border-radius: 8px;
-                min-height: 60px;
-                display: flex;
-                align-items: center;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
             }
-            
+
+            .option input[type="radio"] {
+                margin: 0;
+                transform: scale(1.1);
+            }
+
+            .option span {
+                font-size: 0.95rem;
+            }
+
             .navigation {
                 flex-direction: column;
                 gap: 1rem;
-                margin-top: 1.5rem;
-            }
-            
-            .btn {
-                padding: 0.8rem 1.5rem;
-                font-size: 0.95rem;
-                width: 100%;
-                min-height: 48px;
-            }
-            
-            .back-button {
-                top: 15px;
-                left: 15px;
-                padding: 10px;
-                font-size: 1.1rem;
-            }
-            
-            .result-container {
-                padding: 1.5rem 1rem;
-            }
-            
-            .result-icon {
-                font-size: 3rem;
-                margin-bottom: 1rem;
-            }
-            
-            .result-container h2 {
-                font-size: 1.8rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .result-container p {
-                font-size: 0.95rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .perfect-match {
-                padding: 1.5rem 1rem;
-                margin-bottom: 1rem;
-                border-radius: 8px;
-            }
-            
-            .perfect-match h3 {
-                font-size: 1.5rem;
-                margin: 0.8rem 0;
-            }
-            
-            .perfect-description {
-                font-size: 0.95rem;
-                line-height: 1.5;
-            }
-            
-            .match-badge {
-                padding: 0.4rem 1rem;
-                font-size: 0.9rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .career-card {
-                padding: 1rem;
-                margin-bottom: 1rem;
-                border-radius: 8px;
-            }
-            
-            .career-card h4 {
-                font-size: 1.1rem;
-                margin-bottom: 0.5rem;
-            }
-            
-            .career-card p {
-                font-size: 0.9rem;
-                line-height: 1.4;
-            }
-            
-            .home-btn {
-                margin-top: 1.5rem;
-                width: 100%;
-            }
-        }
-
-        /* Small Mobile Devices (481px - 767px) */
-        @media (min-width: 481px) and (max-width: 767px) {
-            body {
-                padding: 1.5rem 1rem;
-            }
-            
-            .container {
-                border-radius: 18px;
-            }
-            
-            .header {
-                padding: 1.8rem 1.5rem;
-            }
-            
-            .header h1 {
-                font-size: 2.2rem;
-                margin-bottom: 0.4rem;
-            }
-            
-            .header p {
-                font-size: 1rem;
-            }
-            
-            .progress-container {
-                padding: 1rem 1.5rem;
-            }
-            
-            .content {
-                padding: 1.5rem;
-            }
-            
-            .question h3 {
-                font-size: 1.3rem;
-                margin-bottom: 1.2rem;
-            }
-            
-            .options {
-                gap: 1rem;
-            }
-            
-            .option {
-                padding: 1.2rem;
-                font-size: 1rem;
-                min-height: 65px;
-            }
-            
-            .navigation {
-                flex-direction: row;
-                gap: 1rem;
                 margin-top: 2rem;
             }
-            
+
             .btn {
-                padding: 0.9rem 1.8rem;
+                width: 100%;
+                padding: 0.8rem 1.5rem;
                 font-size: 1rem;
-                flex: 1;
             }
-            
-            .back-button {
-                top: 18px;
-                left: 18px;
-                padding: 11px;
-                font-size: 1.15rem;
-            }
-            
+
             .result-container {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem 1rem;
             }
-            
-            .perfect-match {
-                padding: 2rem 1.5rem;
-                margin-bottom: 1.2rem;
-            }
-            
-            .perfect-match h3 {
+
+            .result-container h2 {
                 font-size: 1.8rem;
             }
-            
+
+            .result-icon {
+                font-size: 3.5rem;
+            }
+
             .career-card {
                 padding: 1.5rem;
             }
+
+            .match-percentage {
+                position: static;
+                display: inline-block;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
         }
 
-        /* Tablet Devices (768px - 1023px) */
-        @media (min-width: 768px) and (max-width: 1023px) {
-            body {
+        /* Tablet Devices (768px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                max-width: 750px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .content {
                 padding: 2rem 1.5rem;
             }
-            
-            .container {
-                max-width: 700px;
-            }
-            
-            .header h1 {
-                font-size: 2.3rem;
-            }
-            
-            .header p {
-                font-size: 1.05rem;
-            }
-            
-            .content {
-                padding: 1.8rem;
-            }
-            
+
             .question h3 {
-                font-size: 1.35rem;
-                margin-bottom: 1.3rem;
+                font-size: 1.4rem;
             }
-            
+
             .options {
+                gap: 1rem;
+            }
+
+            .option {
+                padding: 1.1rem;
+            }
+
+            .career-recommendations {
                 gap: 1.2rem;
             }
-            
-            .option {
-                padding: 1.3rem;
-                font-size: 1.05rem;
-                min-height: 70px;
-            }
-            
-            .navigation {
-                gap: 1.5rem;
-                margin-top: 2.5rem;
-            }
-            
-            .btn {
-                padding: 1rem 2rem;
-                font-size: 1.05rem;
-            }
-            
-            .result-container {
-                padding: 2.5rem 2rem;
-            }
-            
-            .perfect-match {
-                padding: 2.2rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .perfect-match h3 {
-                font-size: 1.9rem;
-            }
-            
-            .career-card {
-                padding: 1.8rem;
-            }
         }
 
-        /* Laptop/Desktop (1024px - 1439px) */
-        @media (min-width: 1024px) and (max-width: 1439px) {
-            body {
-                padding: 2.5rem 2rem;
-            }
-            
+        /* Large Screens (1024px+) */
+        @media (min-width: 1025px) {
             .container {
-                max-width: 850px;
+                max-width: 1000px;
             }
-            
-            .header {
-                padding: 2.2rem;
-            }
-            
-            .header h1 {
-                font-size: 2.6rem;
-            }
-            
-            .header p {
-                font-size: 1.15rem;
-            }
-            
-            .content {
-                padding: 2.2rem;
-            }
-            
-            .question h3 {
-                font-size: 1.45rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .options {
-                gap: 1.3rem;
-            }
-            
-            .option {
-                padding: 1.4rem;
-                font-size: 1.1rem;
-                min-height: 75px;
-            }
-            
-            .navigation {
-                gap: 2rem;
-                margin-top: 3rem;
-            }
-            
-            .btn {
-                padding: 1.1rem 2.5rem;
-                font-size: 1.1rem;
-            }
-            
-            .result-container {
-                padding: 3rem 2.5rem;
-            }
-            
-            .perfect-match {
-                padding: 2.5rem;
-                margin-bottom: 1.8rem;
-            }
-            
-            .perfect-match h3 {
-                font-size: 2.1rem;
-            }
-            
-            .career-card {
-                padding: 2rem;
-            }
-        }
 
-        /* Large Screens (1440px+) */
-        @media (min-width: 1440px) {
-            body {
-                padding: 3rem 2.5rem;
-            }
-            
-            .container {
-                max-width: 900px;
-            }
-            
-            .header {
-                padding: 2.5rem;
-            }
-            
             .header h1 {
                 font-size: 2.8rem;
             }
-            
-            .header p {
-                font-size: 1.2rem;
-            }
-            
+
             .content {
-                padding: 2.5rem;
+                padding: 3rem 2.5rem;
             }
-            
+
             .question h3 {
-                font-size: 1.5rem;
-                margin-bottom: 1.8rem;
+                font-size: 1.6rem;
             }
-            
-            .options {
-                gap: 1.5rem;
+
+            .career-recommendations {
+                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                gap: 2rem;
             }
-            
-            .option {
-                padding: 1.6rem;
-                font-size: 1.15rem;
-                min-height: 80px;
+        }
+
+        /* Extra Large Screens (1440px+) */
+        @media (min-width: 1440px) {
+            .container {
+                max-width: 1200px;
             }
-            
-            .navigation {
-                gap: 2.5rem;
-                margin-top: 3.5rem;
-            }
-            
-            .btn {
-                padding: 1.2rem 3rem;
-                font-size: 1.15rem;
-            }
-            
-            .result-container {
+
+            .content {
                 padding: 3.5rem 3rem;
             }
-            
-            .perfect-match {
-                padding: 3rem;
-                margin-bottom: 2rem;
-            }
-            
-            .perfect-match h3 {
-                font-size: 2.3rem;
-            }
-            
-            .career-card {
-                padding: 2.5rem;
-            }
-        }
 
-        /* Touch Device Optimizations */
-        @media (hover: none) and (pointer: coarse) {
-            .option {
-                min-height: 60px;
-                padding: 1.2rem;
-            }
-            
-            .btn {
-                min-height: 48px;
-                padding: 1rem 2rem;
-            }
-            
-            .back-button {
-                min-height: 44px;
-                min-width: 44px;
-                padding: 12px;
-            }
-            
-            /* Remove hover effects on touch devices */
-            .option:hover {
-                transform: none;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            
-            .btn:hover {
-                transform: none;
-            }
-            
-            /* Add tap highlights */
-            .option,
-            .btn,
-            .back-button {
-                -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
-            }
-        }
-
-        /* Landscape Orientation for Mobile */
-        @media (max-width: 767px) and (orientation: landscape) {
-            body {
-                padding: 1rem 0.5rem;
-            }
-            
-            .container {
-                margin: 0;
-            }
-            
-            .header {
-                padding: 1rem;
-            }
-            
             .header h1 {
-                font-size: 1.6rem;
-                margin-bottom: 0.2rem;
+                font-size: 3rem;
             }
-            
-            .header p {
-                font-size: 0.9rem;
-            }
-            
-            .progress-container {
-                padding: 0.5rem 1rem;
-            }
-            
-            .content {
-                padding: 1rem;
-            }
-            
+
             .question h3 {
-                font-size: 1.1rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .options {
-                gap: 0.6rem;
-            }
-            
-            .option {
-                padding: 0.8rem;
-                font-size: 0.85rem;
-                min-height: 50px;
-            }
-            
-            .navigation {
-                margin-top: 1rem;
-                gap: 0.8rem;
-            }
-            
-            .btn {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            
-            .back-button {
-                top: 10px;
-                left: 10px;
-                padding: 8px;
-                font-size: 1rem;
-            }
-            
-            .result-container {
-                padding: 1rem;
-            }
-            
-            .perfect-match {
-                padding: 1rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .perfect-match h3 {
-                font-size: 1.3rem;
-                margin: 0.5rem 0;
-            }
-            
-            .career-card {
-                padding: 0.8rem;
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Mobile-only Header/Navbar -->
-    <header class="mobile-only-header">
-        <div class="mobile-header-container">
-            <a href="index.html" class="mobile-logo"><i class="fas fa-compass"></i> CareerPath Navigator</a>
-            <button class="mobile-menu-toggle" aria-label="Open menu" title="Menu"><i class="fas fa-bars"></i></button>
-        </div>
-        <div id="mobileNavDropdown" class="mobile-nav-dropdown"></div>
-    </header>
-    <button class="back-button" onclick="goBack()">
-        <i class="fas fa-arrow-left"></i>
-    </button>
-    
+    <a href="index.html" class="back-btn">←</a>
     <div class="container">
         <div class="header">
             <h1>🎯 Career Assessment</h1>
-            <p>Discover your ideal career path through our comprehensive assessment</p>
+            <p>Discover your ideal career path through our smart 5-question assessment</p>
         </div>
 
         <div class="progress-container">
@@ -871,14 +500,14 @@
         </div>
 
         <div class="content" id="assessmentContent">
-            <!-- All 10 Questions will be generated by JavaScript -->
+            <!-- Questions will be generated by JavaScript -->
         </div>
 
         <!-- Results Container -->
         <div class="result-container" id="resultContainer">
-            <div class="result-icon">🎯</div>
-            <h2>Your Perfect Career Match</h2>
-            <p>Based on your responses, we've identified your ideal career path:</p>
+            <div class="result-icon">🎉</div>
+            <h2>Your Career Assessment Results</h2>
+            <p>Based on your responses, here are your personalized career recommendations:</p>
             
             <div class="career-recommendations" id="careerRecommendations">
                 <!-- Results will be populated by JavaScript -->
@@ -891,163 +520,116 @@
     </div>
 
     <script>
-        // Mobile-only Header/Nav (consistent with home) - visible only on small screens
-        (function(){
-            const dropdown = document.getElementById('mobileNavDropdown');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-            function closeMenu(){
-                if(!dropdown) return;
-                dropdown.classList.remove('active');
-                if (toggle) toggle.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-            if (toggle && dropdown){
-                toggle.addEventListener('click', function(){
-                    if (dropdown.classList.contains('active')){ closeMenu(); return; }
-                    dropdown.innerHTML = '
-                        <ul class="mobile-menu-list">
-                            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                            <li><a href="assessment.html" class="active"><i class="fas fa-clipboard-check"></i> Assessment</a></li>
-                            <li><a href="streams.html"><i class="fas fa-stream"></i> Streams</a></li>
-                            <li><a href="colleges.html"><i class="fas fa-university"></i> Colleges</a></li>
-                            <li><a href="jobs.html"><i class="fas fa-briefcase"></i> Jobs</a></li>
-                        </ul>';
-                    dropdown.classList.add('active');
-                    toggle.innerHTML = '<i class="fas fa-times"></i>';
-                    dropdown.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeMenu));
-                });
-                window.addEventListener('resize', function(){ if (window.innerWidth > 768) closeMenu(); });
-            }
-        })();
-        // Assessment Questions Data
+        // Optimized 5-Question Assessment for Maximum Career Insight
         const questions = [
             {
                 id: 1,
-                type: 'interest',
-                question: "Which subjects or topics interest you the most?",
+                type: 'primary_interest',
+                question: "What type of work activities genuinely excite and motivate you?",
                 options: [
-                    { value: 'technology', text: 'Technology, Programming, and Innovation' },
-                    { value: 'healthcare', text: 'Healthcare, Biology, and Human Sciences' },
-                    { value: 'business', text: 'Business, Economics, and Management' },
-                    { value: 'creative', text: 'Arts, Design, and Creative Expression' },
-                    { value: 'education', text: 'Teaching, Learning, and Education' }
+                    { value: 'tech_innovation', text: 'Creating technology solutions, coding, and innovation' },
+                    { value: 'people_health', text: 'Helping people, healthcare, and improving lives' },
+                    { value: 'business_growth', text: 'Business strategy, leadership, and driving growth' },
+                    { value: 'creative_design', text: 'Artistic creation, design, and visual expression' },
+                    { value: 'education_research', text: 'Teaching, research, and knowledge sharing' }
                 ]
             },
             {
                 id: 2,
-                type: 'skill',
-                question: "What are you naturally good at?",
+                type: 'work_style',
+                question: "How do you prefer to approach problems and challenges?",
                 options: [
-                    { value: 'analytical', text: 'Problem-solving and Analytical Thinking' },
-                    { value: 'communication', text: 'Communication and People Skills' },
-                    { value: 'creative', text: 'Creative and Artistic Abilities' },
-                    { value: 'leadership', text: 'Leadership and Organization' },
-                    { value: 'technical', text: 'Technical and Hands-on Skills' }
+                    { value: 'analytical_systematic', text: 'Analyze data, use logic, and systematic approaches' },
+                    { value: 'collaborative_empathetic', text: 'Work with others, understand different perspectives' },
+                    { value: 'strategic_leadership', text: 'Take charge, make decisions, and lead teams' },
+                    { value: 'creative_innovative', text: 'Think outside the box and find unique solutions' },
+                    { value: 'research_methodical', text: 'Research thoroughly and use proven methods' }
                 ]
             },
             {
                 id: 3,
-                type: 'personality',
-                question: "How do you prefer to work?",
+                type: 'core_skills',
+                question: "Which of these best describes your strongest natural abilities?",
                 options: [
-                    { value: 'team', text: 'In a collaborative team environment' },
-                    { value: 'independent', text: 'Independently with minimal supervision' },
-                    { value: 'leading', text: 'Leading and directing others' },
-                    { value: 'helping', text: 'Helping and supporting others' },
-                    { value: 'structured', text: 'In a structured, organized environment' }
+                    { value: 'technical_logical', text: 'Technical skills, programming, and logical thinking' },
+                    { value: 'interpersonal_caring', text: 'Communication, empathy, and helping others' },
+                    { value: 'leadership_business', text: 'Leadership, negotiation, and business acumen' },
+                    { value: 'artistic_creative', text: 'Creativity, design sense, and artistic vision' },
+                    { value: 'analytical_research', text: 'Research, analysis, and academic thinking' }
                 ]
             },
             {
                 id: 4,
-                type: 'interest',
-                question: "What kind of impact do you want to make?",
+                type: 'work_environment',
+                question: "What type of work environment would make you most productive?",
                 options: [
-                    { value: 'technological', text: 'Advance technology and innovation' },
-                    { value: 'health', text: 'Improve health and save lives' },
-                    { value: 'economic', text: 'Drive economic growth and business success' },
-                    { value: 'cultural', text: 'Influence culture and artistic expression' },
-                    { value: 'educational', text: 'Shape minds and educate future generations' }
+                    { value: 'tech_modern', text: 'Modern tech office with latest tools and equipment' },
+                    { value: 'healthcare_service', text: 'Healthcare setting focused on helping people' },
+                    { value: 'corporate_dynamic', text: 'Dynamic corporate environment with growth opportunities' },
+                    { value: 'creative_flexible', text: 'Creative studio with flexible, artistic atmosphere' },
+                    { value: 'academic_quiet', text: 'Quiet academic or research environment' }
                 ]
             },
             {
                 id: 5,
-                type: 'skill',
-                question: "What type of thinking comes naturally to you?",
+                type: 'career_goals',
+                question: "What kind of long-term impact do you want to make in your career?",
                 options: [
-                    { value: 'logical', text: 'Logical and systematic thinking' },
-                    { value: 'creative', text: 'Creative and imaginative thinking' },
-                    { value: 'strategic', text: 'Strategic and big-picture thinking' },
-                    { value: 'empathetic', text: 'Empathetic and people-focused thinking' },
-                    { value: 'practical', text: 'Practical and hands-on thinking' }
+                    { value: 'tech_advancement', text: 'Advance technology and solve complex technical problems' },
+                    { value: 'health_lives', text: 'Improve health, save lives, and enhance well-being' },
+                    { value: 'business_success', text: 'Build successful businesses and drive economic growth' },
+                    { value: 'cultural_artistic', text: 'Influence culture, inspire others, and create beauty' },
+                    { value: 'knowledge_education', text: 'Expand knowledge and educate future generations' }
                 ]
             }
         ];
 
-        // Career paths and scoring
+        // Comprehensive Career Paths with Detailed Information
         const careerPaths = {
             technology: {
-                name: "Technology & Engineering",
+                name: "Technology & Software Development",
                 careers: [
-                    "Software Developer",
-                    "Data Scientist",
-                    "Cybersecurity Specialist",
-                    "AI/ML Engineer",
-                    "Web Developer"
+                    "Software Engineer", "Data Scientist", "Cybersecurity Specialist", 
+                    "AI/ML Engineer", "Full-Stack Developer", "DevOps Engineer"
                 ],
-                description: "Improve lives through technological innovation",
-                perfectMatch: "Software Engineer",
-                perfectDescription: "As a Software Engineer, you'll design and develop innovative software solutions, collaborate with cross-functional teams, and solve complex problems using your analytical and creative skills. This career offers excellent growth opportunities, competitive compensation, and the chance to work on cutting-edge technologies."
+                description: "Build innovative software solutions, work with cutting-edge technology, and solve complex technical challenges in the digital world.",
+                growth: "High growth potential with excellent salary prospects"
             },
             healthcare: {
-                name: "Healthcare & Medicine",
+                name: "Healthcare & Medical Sciences",
                 careers: [
-                    "Physician",
-                    "Nurse Practitioner",
-                    "Medical Researcher",
-                    "Healthcare Administrator",
-                    "Physical Therapist"
+                    "Doctor", "Nurse", "Medical Researcher", "Healthcare Administrator", 
+                    "Physical Therapist", "Public Health Specialist"
                 ],
-                description: "Improve lives and contribute to health and wellness",
-                perfectMatch: "Healthcare Data Analyst",
-                perfectDescription: "As a Healthcare Data Analyst, you'll use your analytical skills to improve patient outcomes, optimize healthcare delivery, and contribute to medical research. This role combines healthcare knowledge with data science, offering a meaningful career with strong job security and competitive compensation."
+                description: "Make a direct impact on people's lives through healthcare, medical treatment, and health improvement initiatives.",
+                growth: "Stable career with high job security and meaningful work"
             },
             business: {
-                name: "Business & Finance",
+                name: "Business & Management",
                 careers: [
-                    "Business Analyst",
-                    "Marketing Manager",
-                    "Financial Advisor",
-                    "Project Manager",
-                    "Entrepreneur"
+                    "Business Analyst", "Project Manager", "Marketing Manager", 
+                    "Financial Advisor", "Entrepreneur", "Operations Manager"
                 ],
-                description: "Drive growth and success in the business world",
-                perfectMatch: "Business Development Manager",
-                perfectDescription: "As a Business Development Manager, you'll identify growth opportunities, build strategic partnerships, and drive organizational success. This dynamic role leverages your leadership skills and business acumen, offering excellent earning potential and a clear path to executive positions."
+                description: "Drive business growth, manage teams, make strategic decisions, and build successful organizations in various industries.",
+                growth: "Excellent leadership opportunities with high earning potential"
             },
             creative: {
                 name: "Creative Arts & Design",
                 careers: [
-                    "Graphic Designer",
-                    "Content Creator",
-                    "Architect",
-                    "Photographer",
-                    "UX/UI Designer"
+                    "Graphic Designer", "UX/UI Designer", "Content Creator", 
+                    "Architect", "Marketing Creative", "Digital Artist"
                 ],
-                description: "Express creativity and bring artistic visions to life",
-                perfectMatch: "UX/UI Designer",
-                perfectDescription: "As a UX/UI Designer, you'll create intuitive, engaging digital experiences that delight users while meeting business objectives. This career combines creativity with problem-solving, offering opportunities to work on diverse projects across industries with competitive compensation and flexible work arrangements."
+                description: "Express creativity, design beautiful and functional solutions, and bring artistic visions to life across multiple media.",
+                growth: "Growing digital creative economy with diverse opportunities"
             },
             education: {
-                name: "Education & Training",
+                name: "Education & Research",
                 careers: [
-                    "Teacher",
-                    "Corporate Trainer",
-                    "Educational Counselor",
-                    "Curriculum Developer",
-                    "Academic Researcher"
+                    "Teacher", "Professor", "Educational Researcher", "Curriculum Developer", 
+                    "Corporate Trainer", "Educational Technology Specialist"
                 ],
-                description: "Shape minds and contribute to learning and development",
-                perfectMatch: "Educational Technology Specialist",
-                perfectDescription: "As an Educational Technology Specialist, you'll develop and implement innovative learning solutions that transform education. This role combines your passion for teaching with technology skills, offering opportunities to make a meaningful impact while enjoying job stability and work-life balance."
+                description: "Shape future minds, conduct meaningful research, and contribute to the advancement of knowledge and learning.",
+                growth: "Stable career with opportunity to make lasting social impact"
             }
         };
 
@@ -1084,7 +666,7 @@
                         <button class="btn btn-secondary" ${index === 0 ? 'style="visibility: hidden"' : ''} 
                                 onclick="previousQuestion()">← Previous</button>
                         <button class="btn" id="nextBtn" onclick="${index === totalQuestions - 1 ? 'finishAssessment()' : 'nextQuestion()'}" disabled>
-                            ${index === totalQuestions - 1 ? 'Finish Assessment' : 'Next →'}
+                            ${index === totalQuestions - 1 ? 'Get My Results 🎯' : 'Next Question →'}
                         </button>
                     </div>
                 </div>
@@ -1121,6 +703,19 @@
                 currentQuestionIndex--;
                 renderQuestion(currentQuestionIndex);
                 updateProgress();
+                
+                // Re-select previous answer if exists
+                const questionId = questions[currentQuestionIndex].id;
+                if (answers[questionId]) {
+                    setTimeout(() => {
+                        const selectedOption = document.querySelector(`input[value="${answers[questionId]}"]`);
+                        if (selectedOption) {
+                            selectedOption.closest('.option').classList.add('selected');
+                            selectedOption.checked = true;
+                            document.getElementById('nextBtn').disabled = false;
+                        }
+                    }, 100);
+                }
             }
         }
 
@@ -1137,7 +732,7 @@
             displayResults(results);
         }
 
-        // Calculate Results
+        // Advanced Results Calculation
         function calculateResults() {
             const scores = {
                 technology: 0,
@@ -1147,113 +742,135 @@
                 education: 0
             };
 
-            // Scoring logic based on answers
-            Object.values(answers).forEach(answer => {
+            // Enhanced scoring based on optimized questions
+            Object.entries(answers).forEach(([questionId, answer]) => {
                 switch(answer) {
-                    case 'technology':
-                    case 'programming':
-                    case 'technical':
-                    case 'analytical':
-                    case 'innovation':
-                    case 'logical':
-                    case 'systematic':
-                    case 'technological':
-                        scores.technology += 2;
+                    // Technology-focused answers
+                    case 'tech_innovation':
+                    case 'analytical_systematic':
+                    case 'technical_logical':
+                    case 'tech_modern':
+                    case 'tech_advancement':
+                        scores.technology += 3;
                         break;
-                    case 'healthcare':
-                    case 'medical':
-                    case 'helping':
-                    case 'empathetic':
-                    case 'health':
-                        scores.healthcare += 2;
+                    
+                    // Healthcare-focused answers
+                    case 'people_health':
+                    case 'collaborative_empathetic':
+                    case 'interpersonal_caring':
+                    case 'healthcare_service':
+                    case 'health_lives':
+                        scores.healthcare += 3;
                         break;
-                    case 'business':
-                    case 'leadership':
-                    case 'success':
-                    case 'strategic':
-                    case 'economic':
-                        scores.business += 2;
+                    
+                    // Business-focused answers
+                    case 'business_growth':
+                    case 'strategic_leadership':
+                    case 'leadership_business':
+                    case 'corporate_dynamic':
+                    case 'business_success':
+                        scores.business += 3;
                         break;
-                    case 'creative':
-                    case 'design':
-                    case 'creativity':
-                    case 'cultural':
-                        scores.creative += 2;
+                    
+                    // Creative-focused answers
+                    case 'creative_design':
+                    case 'creative_innovative':
+                    case 'artistic_creative':
+                    case 'creative_flexible':
+                    case 'cultural_artistic':
+                        scores.creative += 3;
                         break;
-                    case 'education':
-                    case 'teaching':
-                    case 'educational':
-                        scores.education += 2;
-                        break;
-                    case 'communication':
-                        scores.business += 1;
-                        scores.education += 1;
-                        break;
-                    case 'independent':
-                        scores.technology += 1;
-                        scores.creative += 1;
-                        break;
-                    case 'team':
-                        scores.business += 1;
-                        scores.healthcare += 1;
+                    
+                    // Education-focused answers
+                    case 'education_research':
+                    case 'research_methodical':
+                    case 'analytical_research':
+                    case 'academic_quiet':
+                    case 'knowledge_education':
+                        scores.education += 3;
                         break;
                 }
             });
 
-            // Find the career with the highest score
-            let maxScore = 0;
-            let perfectCareer = 'technology'; // Default
-            
-            for (const [career, score] of Object.entries(scores)) {
-                if (score > maxScore) {
-                    maxScore = score;
-                    perfectCareer = career;
-                }
+            // Ensure everyone gets at least one meaningful recommendation
+            const maxScore = Math.max(...Object.values(scores));
+            if (maxScore === 0) {
+                // Default balanced scoring if no clear preferences
+                scores.technology = 2;
+                scores.business = 2;
+                scores.creative = 1;
             }
+
+            // Calculate percentages and sort
+            const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
             
-            // Calculate compatibility percentage (how close to perfect match)
-            const total = Object.values(scores).reduce((a, b) => a + b, 0);
-            const compatibilityPercentage = Math.round((maxScore / total) * 100);
-            
-            return {
-                career: perfectCareer,
-                percentage: compatibilityPercentage
-            };
+            return Object.entries(scores)
+                .map(([key, score]) => ({
+                    career: key,
+                    score: score,
+                    percentage: Math.max(Math.round((score / total) * 100), score > 0 ? 15 : 0)
+                }))
+                .filter(result => result.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3); // Top 3 recommendations
         }
 
         // Display Results
-        function displayResults(result) {
+        function displayResults(results) {
             document.getElementById('assessmentContent').style.display = 'none';
             document.querySelector('.progress-container').style.display = 'none';
             
             const resultContainer = document.getElementById('resultContainer');
             const recommendationsDiv = document.getElementById('careerRecommendations');
             
-            const path = careerPaths[result.career];
+            // Ensure at least one result
+            if (results.length === 0) {
+                results = [
+                    { career: 'technology', score: 2, percentage: 40 },
+                    { career: 'business', score: 2, percentage: 35 },
+                    { career: 'creative', score: 1, percentage: 25 }
+                ];
+            }
             
-            recommendationsDiv.innerHTML = `
-                <div class="perfect-match">
-                    <div class="match-badge">${result.percentage}% Perfect Match</div>
-                    <h3>${path.perfectMatch}</h3>
-                    <p class="perfect-description">${path.perfectDescription}</p>
-                </div>
-                <div class="career-card">
-                    <h4>${path.name} Field</h4>
-                    <p>${path.description}</p>
-                    <p><strong>Other Career Options:</strong> ${path.careers.join(', ')}</p>
-                </div>
-            `;
+            recommendationsDiv.innerHTML = results.map((result, index) => {
+                const path = careerPaths[result.career];
+                const rank = index === 0 ? '🥇 Top Match' : index === 1 ? '🥈 Great Match' : '🥉 Good Match';
+                
+                return `
+                    <div class="career-card">
+                        <div class="match-percentage">${rank} - ${result.percentage}%</div>
+                        <h4>${path.name}</h4>
+                        <p>${path.description}</p>
+                        <p class="career-list"><strong>Career Opportunities:</strong> ${path.careers.join(', ')}</p>
+                        <p><strong>Growth Outlook:</strong> ${path.growth}</p>
+                    </div>
+                `;
+            }).join('');
             
             resultContainer.classList.add('active');
+            
+            // Smooth scroll to results
+            setTimeout(() => {
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
         }
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', initAssessment);
-        
-        // Back button functionality
-        function goBack() {
-            window.location.href = 'index.html';
-        }
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn && !nextBtn.disabled) {
+                    nextBtn.click();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentQuestionIndex > 0) {
+                    previousQuestion();
+                }
+            }
+        });
     </script>
 </body>
 </html>
