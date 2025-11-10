@@ -112,8 +112,8 @@
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="hero-container">
-                <h1>Navigate Your Career Journey</h1>
-                <p>Discover your perfect career path with our comprehensive guidance platform</p>
+                <!-- <h1>Navigate Your Career Journey</h1>
+                <p>Discover your perfect career path with our comprehensive guidance platform</p> -->
                 <a href="#features" class="cta-button">
                     <i class="fas fa-arrow-right"></i> Explore Features
                 </a>
@@ -544,619 +544,689 @@
     </div>
 
     <!-- JavaScript -->
-    <script>
-        // Enhanced main.js functionality integrated
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeWelcomeScreen();
-            initializeModals();
-            initializeNavigationBar();
-            initializeSmoothScrolling();
-            initializeNavbarInteractivity();
-            initializeAuth();
-            initializeTheme();
+  <script>
+    // Enhanced main.js functionality integrated
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeWelcomeScreen(); // <-- This function is now fixed
+        initializeModals();
+        initializeNavigationBar();
+        initializeSmoothScrolling();
+        initializeNavbarInteractivity();
+        initializeAuth();
+        initializeTheme();
+
+        // Check for URL messages
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('verified') && urlParams.get('verified') === 'true') {
+            showNotification('Email verified successfully! Please sign in.', 'success');
+            
+            // Automatically open the login modal
+            const loginModal = document.getElementById('loginModal');
+            if (loginModal) {
+                setTimeout(() => {
+                    loginModal.style.display = 'block';
+                }, 500);
+            }
+        }
+    });
+    
+    // Navbar Interactivity
+    function initializeNavbarInteractivity() {
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.getElementById('navMenu');
+        const mobileNavDropdown = document.getElementById('mobileNavDropdown');
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            updateActiveMenuOnScroll();
         });
         
-        // Navbar Interactivity
-        function initializeNavbarInteractivity() {
-            const navLinks = document.querySelectorAll('.nav-menu a');
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const navMenu = document.getElementById('navMenu');
-            const mobileNavDropdown = document.getElementById('mobileNavDropdown');
-            const header = document.querySelector('header');
-            
-            // Navbar scroll effect
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-                
-                // Update active menu item based on scroll position
-                updateActiveMenuOnScroll();
-            });
-            
-            // Mobile menu toggle
-            if (mobileMenuToggle && mobileNavDropdown) {
-                mobileMenuToggle.addEventListener('click', function() {
-                    if (window.innerWidth <= 768) {
-                        if (mobileNavDropdown.classList.contains('active')) {
-                            mobileNavDropdown.classList.remove('active');
-                            mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                        } else {
-                            // Clone the nav menu for mobile dropdown
-                            mobileNavDropdown.innerHTML = navMenu.innerHTML;
-                            mobileNavDropdown.classList.add('active');
-                            mobileMenuToggle.innerHTML = '<i class="fas fa-times"></i>';
-                            
-                            // Add event listeners to mobile menu items
-                            const mobileLinks = mobileNavDropdown.querySelectorAll('a');
-                            mobileLinks.forEach(link => {
-                                link.addEventListener('click', function() {
-                                    mobileNavDropdown.classList.remove('active');
-                                    mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                                });
-                            });
-                        }
-                    }
-                });
-            }
-            
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 768 && mobileNavDropdown) {
-                    mobileNavDropdown.classList.remove('active');
-                    if (mobileMenuToggle) {
+        if (mobileMenuToggle && mobileNavDropdown) {
+            mobileMenuToggle.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    if (mobileNavDropdown.classList.contains('active')) {
+                        mobileNavDropdown.classList.remove('active');
                         mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                }
-            });
-            
-            // Update active menu item based on scroll position
-            function updateActiveMenuOnScroll() {
-                const scrollPosition = window.scrollY + 100;
-                
-                // Get all sections with IDs
-                const sections = document.querySelectorAll('section[id]');
-                
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.offsetHeight;
-                    const sectionId = section.getAttribute('id');
-                    
-                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                        // Remove active class from all links
-                        navLinks.forEach(link => link.classList.remove('active'));
-                        
-                        // Add active class to current section link
-                        const activeLink = document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
-                        if (activeLink) {
-                            activeLink.classList.add('active');
-                        }
-                    }
-                });
-            }
-        }
-
-        // Welcome Screen Functionality
-        function initializeWelcomeScreen() {
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            const loadingScreen = document.getElementById('loadingScreen');
-            const mainContent = document.getElementById('mainContent');
-            const welcomeBtn = document.getElementById('welcomeBtn');
-            
-            // Check if user is coming from another page within the site
-            const referrer = document.referrer;
-            const currentHost = window.location.host;
-            const isInternalNavigation = referrer.includes(currentHost);
-            
-            // Ensure initial state: show welcome only
-            if (welcomeScreen) { welcomeScreen.style.display = 'flex'; welcomeScreen.style.opacity = '1'; }
-            if (loadingScreen) { loadingScreen.style.display = 'none'; loadingScreen.style.opacity = '1'; }
-            if (mainContent) { mainContent.style.display = 'none'; mainContent.style.opacity = '0'; }
-
-            // Skip welcome screen if navigating within the site
-            if (isInternalNavigation) {
-                welcomeScreen.style.display = 'none';
-                mainContent.style.display = 'block';
-                mainContent.style.opacity = '1';
-                return;
-            }
-            
-            if (welcomeBtn) {
-                welcomeBtn.addEventListener('click', function() {
-                    // lock scroll during transition
-                    document.documentElement.style.overflow = 'hidden';
-                    document.body.style.overflow = 'hidden';
-                    welcomeScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        welcomeScreen.style.display = 'none';
-                        loadingScreen.style.display = 'flex';
-                        
-                        setTimeout(() => {
-                            loadingScreen.style.opacity = '0';
-                            setTimeout(() => {
-                                loadingScreen.style.display = 'none';
-                                mainContent.style.display = 'block';
-                                // Ensure we land at the top of the home page
-                                // Force viewport to top of Home
-                                window.location.hash = '';
-                                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-                                document.body.scrollTop = 0;
-                                document.documentElement.scrollTop = 0;
-                                setTimeout(()=>{ window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); }, 0);
-                                setTimeout(() => {
-                                    mainContent.style.opacity = '1';
-                                    // restore scroll
-                                    document.documentElement.style.overflow = '';
-                                    document.body.style.overflow = '';
-                                }, 50);
-                            }, 500);
-                        }, 2000);
-                    }, 500);
-                });
-            }
-        }
-
-        // Navigation Bar Enhancement
-        function initializeNavigationBar() {
-            // Find navigation links with multiple selectors
-            const navigationSelectors = [
-                'nav a', '.nav-link', '.navbar a', '.navigation a',
-                '.menu a', '.header a', 'header a', '.nav-item a',
-                '.nav-menu a'
-            ];
-            
-            let navLinks = [];
-            navigationSelectors.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                navLinks = navLinks.concat(Array.from(elements));
-            });
-            
-            // Remove duplicates
-            navLinks = [...new Set(navLinks)];
-            
-            navLinks.forEach(link => {
-                const linkText = link.textContent.toLowerCase().trim();
-                const linkHref = link.getAttribute('href');
-                
-                // Handle Home link - no loading screen
-                if (linkText.includes('home') || linkHref === '#home' || linkHref === 'index.html') {
-                    // If we're already on the home page and clicking home link
-                    if (window.location.pathname.endsWith('index.html') || 
-                        window.location.pathname === '/' || 
-                        window.location.pathname.endsWith('/')) {
-                        link.addEventListener('click', (e) => {
-                            // Just scroll to top if already on home page
-                            if (linkHref === '#home') {
-                                e.preventDefault();
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                            }
-                        });
                     } else {
-                        // If on another page, navigate directly to home without loading screen
-                        link.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            window.location.href = 'index.html';
+                        mobileNavDropdown.innerHTML = navMenu.innerHTML;
+                        mobileNavDropdown.classList.add('active');
+                        mobileMenuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                        
+                        const mobileLinks = mobileNavDropdown.querySelectorAll('a');
+                        mobileLinks.forEach(link => {
+                            link.addEventListener('click', function() {
+                                mobileNavDropdown.classList.remove('active');
+                                mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                            });
                         });
                     }
                 }
-                
-                // Check if it's a navigation link for our pages
-                if (linkText.includes('career assessment') || linkText.includes('assessment') || 
-                    linkHref === 'assessment.html' || link.dataset.page === 'assessment') {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        navigateToPage('assessment.html');
-                    });
-                }
-                
-                if (linkText.includes('career stream') || linkText.includes('streams') || 
-                    linkHref === 'streams.html' || link.dataset.page === 'streams') {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        navigateToPage('streams.html');
-                    });
-                }
-                
-                if (linkText.includes('college') || linkText.includes('finder') || 
-                    linkHref === 'colleges.html' || link.dataset.page === 'colleges') {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        navigateToPage('colleges.html');
-                    });
-                }
-                
-                if (linkText.includes('jobs') || 
-                    linkHref === 'jobs.html' || link.dataset.page === 'jobs') {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        navigateToPage('jobs.html');
-                    });
-                }
             });
         }
-
-        // Enhanced Navigation Function
-        function navigateToPage(pageUrl) {
-            showLoadingIndicator();
+        
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && mobileNavDropdown) {
+                mobileNavDropdown.classList.remove('active');
+                if (mobileMenuToggle) {
+                    mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+        });
+        
+        function updateActiveMenuOnScroll() {
+            const scrollPosition = window.scrollY + 100;
+            const sections = document.querySelectorAll('section[id]');
             
-            setTimeout(() => {
-                window.location.href = pageUrl;
-            }, 800);
-        }
-
-        // Loading Indicator Functions
-        function showLoadingIndicator() {
-            const loader = document.getElementById('navigationLoader');
-            if (loader) {
-                loader.style.display = 'flex';
-                setTimeout(() => {
-                    loader.style.opacity = '1';
-                }, 10);
-            }
-        }
-
-        function hideLoadingIndicator() {
-            const loader = document.getElementById('navigationLoader');
-            if (loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 300);
-            }
-        }
-
-        // Modal Functionality + Auth submit handlers
-        function initializeModals() {
-            const loginBtn = document.querySelector('.btn-login');
-            const signupBtn = document.querySelector('.btn-signup');
-            const loginModal = document.getElementById('loginModal');
-            const signupModal = document.getElementById('signupModal');
-            const closeBtns = document.querySelectorAll('.close');
-
-            if (loginBtn && loginModal) {
-                loginBtn.addEventListener('click', () => {
-                    loginModal.style.display = 'block';
-                });
-            }
-
-            if (signupBtn && signupModal) {
-                signupBtn.addEventListener('click', () => {
-                    signupModal.style.display = 'block';
-                });
-            }
-
-            closeBtns.forEach(closeBtn => {
-                closeBtn.addEventListener('click', (e) => {
-                    const modal = e.target.closest('.modal');
-                    if (modal) {
-                        modal.style.display = 'none';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    const activeLink = document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
                     }
-                });
-            });
-
-            window.addEventListener('click', (e) => {
-                if (e.target.classList.contains('modal')) {
-                    e.target.style.display = 'none';
                 }
             });
+        }
+    }
 
-            // Hook form submit for real auth
-            const loginFormEl = document.getElementById('loginForm');
-            const signupFormEl = document.getElementById('signupForm');
-            if (loginFormEl) {
-                loginFormEl.addEventListener('submit', function(e){
+    // --- (MODIFIED) Welcome Screen Functionality ---
+    function initializeWelcomeScreen() {
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        const welcomeBtn = document.getElementById('welcomeBtn');
+        
+        const referrer = document.referrer;
+        const currentHost = window.location.host;
+        const isInternalNavigation = referrer.includes(currentHost);
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (welcomeScreen) { welcomeScreen.style.display = 'flex'; welcomeScreen.style.opacity = '1'; }
+        if (loadingScreen) { loadingScreen.style.display = 'none'; loadingScreen.style.opacity = '1'; }
+        if (mainContent) { mainContent.style.display = 'none'; mainContent.style.opacity = '0'; }
+
+        // Skip welcome screen if navigating internally OR verifying email
+        if (isInternalNavigation || urlParams.has('verified')) {
+            welcomeScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            mainContent.style.opacity = '1';
+            return;
+        }
+        
+        if (welcomeBtn) {
+            welcomeBtn.addEventListener('click', function() {
+                // 1. Lock scroll
+                document.documentElement.style.overflow = 'hidden';
+                document.body.style.overflow = 'hidden';
+                
+                // 2. Set hash immediately to prevent jump
+                window.location.hash = 'home';
+                
+                // 3. Fade out welcome screen
+                welcomeScreen.style.opacity = '0';
+                setTimeout(() => {
+                    welcomeScreen.style.display = 'none';
+                    
+                    // 4. Show loading screen
+                    loadingScreen.style.display = 'flex';
+                    
+                    // 5. Wait for 2 seconds (as requested)
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        
+                        // 6. Fade out loading screen
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                            
+                            // 7. Show main content
+                            mainContent.style.display = 'block';
+                            
+                            // 8. Do ONE final, instant scroll to top
+                            window.scrollTo(0, 0); 
+                            
+                            // 9. Fade in main content
+                            setTimeout(() => {
+                                mainContent.style.opacity = '1';
+                                // 10. Restore scroll
+                                document.documentElement.style.overflow = '';
+                                document.body.style.overflow = '';
+                            }, 50); // 50ms fade-in
+                        }, 500); // 0.5s fade-out
+                    }, 2000); // 2s loading time
+                }, 500); // 0.5s fade-out
+            });
+        }
+    }
+    // --- (END OF MODIFIED FUNCTION) ---
+
+    // Navigation Bar Enhancement
+    function initializeNavigationBar() {
+        const navigationSelectors = [
+            'nav a', '.nav-link', '.navbar a', '.navigation a',
+            '.menu a', '.header a', 'header a', '.nav-item a',
+            '.nav-menu a'
+        ];
+        let navLinks = [];
+        navigationSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            navLinks = navLinks.concat(Array.from(elements));
+        });
+        navLinks = [...new Set(navLinks)];
+        
+        navLinks.forEach(link => {
+            const linkText = link.textContent.toLowerCase().trim();
+            const linkHref = link.getAttribute('href');
+            
+            if (linkText.includes('home') || linkHref === '#home' || linkHref === 'index.html') {
+                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+                    link.addEventListener('click', (e) => {
+                        if (linkHref === '#home') {
+                            e.preventDefault();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    });
+                } else {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.href = 'index.html';
+                    });
+                }
+            }
+            if (linkText.includes('assessment') || linkHref === 'assessment.html' || link.dataset.page === 'assessment') {
+                link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const email = document.getElementById('loginEmail').value.trim();
-                    const password = document.getElementById('loginPassword').value;
-                    const ok = authLogin(email, password);
+                    navigateToPage('assessment.html');
+                });
+            }
+            if (linkText.includes('stream') || linkHref === 'streams.html' || link.dataset.page === 'streams') {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateToPage('streams.html');
+                });
+            }
+            if (linkText.includes('college') || linkHref === 'colleges.html' || link.dataset.page === 'colleges') {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateToPage('colleges.html');
+                });
+            }
+            if (linkText.includes('jobs') || linkHref === 'jobs.html' || link.dataset.page === 'jobs') {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateToPage('jobs.html');
+                });
+            }
+        });
+    }
+
+    // Navigation Functions
+    function navigateToPage(pageUrl) {
+        showLoadingIndicator();
+        setTimeout(() => {
+            window.location.href = pageUrl;
+        }, 800);
+    }
+    function showLoadingIndicator() {
+        const loader = document.getElementById('navigationLoader');
+        if (loader) {
+            loader.style.display = 'flex';
+            setTimeout(() => { loader.style.opacity = '1'; }, 10);
+        }
+    }
+    function hideLoadingIndicator() {
+        const loader = document.getElementById('navigationLoader');
+        if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 300);
+        }
+    }
+
+    // Modal Functionality + Auth submit handlers
+    function initializeModals() {
+        const loginBtn = document.querySelector('.btn-login');
+        const signupBtn = document.querySelector('.btn-signup');
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const closeBtns = document.querySelectorAll('.close');
+
+        if (loginBtn && loginModal) {
+            loginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'block';
+            });
+        }
+        if (signupBtn && signupModal) {
+            signupBtn.addEventListener('click', () => {
+                signupModal.style.display = 'block';
+            });
+        }
+        closeBtns.forEach(closeBtn => {
+            closeBtn.addEventListener('click', (e) => {
+                e.target.closest('.modal').style.display = 'none';
+            });
+        });
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        const loginFormEl = document.getElementById('loginForm');
+        const signupFormEl = document.getElementById('signupForm');
+        
+        // LOGIN FORM SUBMIT
+        if (loginFormEl) {
+            loginFormEl.addEventListener('submit', function(e){
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                (async () => {
+                    const ok = await authLogin(email, password);
                     if (ok) {
                         loginModal.style.display = 'none';
                         loginFormEl.reset();
-                        showNotification('Logged in successfully', 'success');
+                        showNotification('Logged in successfully!', 'success');
                         updateHeaderAuthState();
-                    } else {
-                        showNotification('Invalid credentials. Please try again.', 'error');
                     }
-                });
-            }
-            if (signupFormEl) {
-                signupFormEl.addEventListener('submit', function(e){
-                    e.preventDefault();
-                    const name = document.getElementById('signupName').value.trim();
-                    const email = document.getElementById('signupEmail').value.trim();
-                    const password = document.getElementById('signupPassword').value;
-                    const ok = authRegister(name, email, password);
+                })();
+            });
+        }
+        
+        // SIGNUP FORM SUBMIT
+        if (signupFormEl) {
+            signupFormEl.addEventListener('submit', function(e){
+                e.preventDefault();
+                const name = document.getElementById('signupName').value.trim();
+                const email = document.getElementById('signupEmail').value.trim();
+                const password = document.getElementById('signupPassword').value;
+                (async () => {
+                    const ok = await authRegister(name, email, password, 'student'); 
                     if (ok) {
                         signupModal.style.display = 'none';
                         signupFormEl.reset();
-                        showNotification('Account created and logged in', 'success');
-                        updateHeaderAuthState();
-                    } else {
-                        showNotification('User already exists with this email.', 'warning');
                     }
-                });
-            }
+                })();
+            });
+        }
 
-            // Forgot password modal logic
-            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-            const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-            const forgotEmailInput = document.getElementById('forgotEmail');
-            const closeBtnsForgot = document.querySelectorAll('.modal .close');
-
-            if (forgotPasswordLink && forgotPasswordModal) {
-                forgotPasswordLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    forgotPasswordModal.style.display = 'block';
-                    forgotEmailInput.value = '';
-                });
-            }
-            if (forgotPasswordForm) {
-                forgotPasswordForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const email = forgotEmailInput.value.trim();
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const exists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
-                    if (exists) {
-                        showNotification('Password reset link sent to your email (simulated).', 'success');
+        // Forgot password modal logic
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+        
+        if (forgotPasswordLink && forgotPasswordModal) {
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                forgotPasswordModal.style.display = 'block';
+            });
+        }
+        if (forgotPasswordForm) {
+            forgotPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('forgotEmail').value.trim();
+                (async () => {
+                    const ok = await authForgotPassword(email);
+                    if (ok) {
                         forgotPasswordModal.style.display = 'none';
-                    } else {
-                        showNotification('No account found with that email.', 'error');
                     }
-                });
-            }
-            // Close modal on X click or outside click
-            closeBtnsForgot.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    btn.closest('.modal').style.display = 'none';
-                });
+                })();
             });
-            window.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal')) {
-                    e.target.style.display = 'none';
+        }
+    }
+
+    // Full-Stack Auth Logic
+    function initializeAuth(){
+        updateHeaderAuthState(); 
+        const userAvatar = document.getElementById('userAvatar');
+        const userDropdown = document.getElementById('userDropdown');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        if (userAvatar && userDropdown) {
+            userAvatar.addEventListener('click', function(){
+                userDropdown.classList.toggle('active');
+                document.getElementById('userMenu').classList.toggle('active');
+            });
+            window.addEventListener('click', function(e){
+                if (e.target.closest('#userMenu') === null) {
+                    userDropdown.classList.remove('active');
+                    document.getElementById('userMenu').classList.remove('active');
                 }
             });
         }
+        if (logoutBtn){ 
+            logoutBtn.addEventListener('click', function(){ 
+                authLogout(); 
+                updateHeaderAuthState(); 
+                showNotification('You have been logged out.', 'info'); 
+            }); 
+        }
+        
+        const navMap = [
+            ['goToAssessment','assessment.html'],
+            ['goToStreams','streams.html'],
+            ['goToColleges','colleges.html'],
+            ['goToJobs','jobs.html']
+        ];
+        navMap.forEach(([id, url])=>{ const el=document.getElementById(id); if(el){ el.addEventListener('click',()=>navigateToPage(url)); }});
+    }
 
-        // Simple Client-side Auth (localStorage)
-        function initializeAuth(){
-            updateHeaderAuthState();
-            const userAvatar = document.getElementById('userAvatar');
-            const userDropdown = document.getElementById('userDropdown');
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('click', function(){
-                    userDropdown.classList.toggle('active');
-                    document.getElementById('userMenu').classList.toggle('active');
-                });
-                window.addEventListener('click', function(e){
-                    if (!document.getElementById('userMenu').contains(e.target)) {
-                        userDropdown.classList.remove('active');
-                        document.getElementById('userMenu').classList.remove('active');
-                    }
-                });
+    function getCurrentUser(){ 
+        try { 
+            return JSON.parse(localStorage.getItem('currentUser') || 'null'); 
+        } catch(e){ 
+            return null; 
+        } 
+    }
+    function setCurrentUser(user, token){ 
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('token', token);
+    }
+
+    async function authRegister(name, email, password, role) {
+        const signupButton = document.querySelector('#signupForm .submit-btn');
+        const checks = {
+            length: password.length >= 8,
+            upper: /[A-Z]/.test(password),
+            lower: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[^A-Za-z0-9]/.test(password)
+        };
+        const allValid = Object.values(checks).every(Boolean);
+
+        if (!allValid) {
+            showNotification('Password does not meet all requirements.', 'error');
+            return false;
+        }
+
+        signupButton.innerHTML = '<span class="loading"></span> Signing Up...';
+        signupButton.disabled = true;
+
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, role })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                showNotification(data.msg, 'error');
+                return false;
             }
-            if (logoutBtn){ logoutBtn.addEventListener('click', function(){ authLogout(); updateHeaderAuthState(); showNotification('Logged out', 'info'); }); }
-            const navMap = [
-                ['goToAssessment','assessment.html'],
-                ['goToStreams','streams.html'],
-                ['goToColleges','colleges.html'],
-                ['goToJobs','jobs.html']
-            ];
-            navMap.forEach(([id, url])=>{ const el=document.getElementById(id); if(el){ el.addEventListener('click',()=>window.location.href=url); }});
+            showNotification(data.msg, 'success');
+            return true;
+        } catch (error) {
+            console.error('Signup Error:', error);
+            showNotification('Network error. Is the backend server running?', 'error');
+            return false;
+        } finally {
+            signupButton.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
+            signupButton.disabled = false;
         }
+    }
 
-        function getUsers(){ try { return JSON.parse(localStorage.getItem('users')||'[]'); } catch(e){ return []; } }
-        function setUsers(users){ localStorage.setItem('users', JSON.stringify(users)); }
-        function getCurrentUser(){ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch(e){ return null; } }
-        function setCurrentUser(user){ localStorage.setItem('currentUser', JSON.stringify(user)); }
-        function authRegister(name, email, password){
-            const users = getUsers();
-            const exists = users.some(u=>u.email.toLowerCase()===email.toLowerCase());
-            if (exists) return false;
-            const user = { name, email, password };
-            users.push(user);
-            setUsers(users);
-            setCurrentUser({ name, email });
-            return true;
-        }
-        function authLogin(email, password){
-            const users = getUsers();
-            const found = users.find(u=>u.email.toLowerCase()===email.toLowerCase() && u.password===password);
-            if (!found) return false;
-            setCurrentUser({ name: found.name||found.email.split('@')[0], email: found.email });
-            return true;
-        }
-        function authLogout(){ localStorage.removeItem('currentUser'); }
-        function updateHeaderAuthState(){
-            const current = getCurrentUser();
-            const authButtons = document.querySelector('.auth-buttons');
-            const userMenu = document.getElementById('userMenu');
-            if (current){
-                if (authButtons) authButtons.style.display = 'none';
-                if (userMenu) {
-                    document.getElementById('userNameLabel').textContent = current.name || 'Account';
-                    document.getElementById('userEmailLabel').textContent = current.email;
-                    userMenu.style.display = 'block';
+    async function authLogin(email, password){
+        const loginButton = document.querySelector('#loginForm .submit-btn');
+        loginButton.innerHTML = '<span class="loading"></span> Logging In...';
+        loginButton.disabled = true;
+
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                if (response.status === 401) { 
+                    showNotification(`
+                        ${data.msg} 
+                        <a href="#" onclick="authResendVerification('${email}')" style="color: #d7263d; text-decoration: underline; font-weight: bold;">
+                            Resend verification?
+                        </a>
+                    `, 'error');
+                } else {
+                    showNotification(data.msg, 'error');
                 }
-            } else {
-                if (userMenu) userMenu.style.display = 'none';
-                if (authButtons) authButtons.style.display = 'flex';
+                return false;
             }
+            setCurrentUser(data.user, data.token);
+            return true;
+        } catch (error) {
+            console.error('Login Error:', error);
+            showNotification('Network error. Is the backend server running?', 'error');
+            return false;
+        } finally {
+            loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            loginButton.disabled = false;
         }
+    }
 
-        // Theme Toggle
-        function initializeTheme(){
-            const toggle = document.getElementById('themeToggle');
-            // Always check localStorage and apply theme on load
-            const saved = localStorage.getItem('theme') || 'light';
-            if (saved === 'dark') {
-                document.documentElement.classList.add('dark-theme');
+    async function authResendVerification(email) {
+        if (!email) {
+            showNotification('Please enter your email in the field first.', 'error');
+            return;
+        }
+        showNotification('Sending new verification link...', 'info');
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/resend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                showNotification(data.msg, 'error');
             } else {
-                document.documentElement.classList.remove('dark-theme');
+                showNotification(data.msg, 'success');
             }
-            updateThemeButtonIcon();
-            if (toggle){
-                toggle.addEventListener('click', function(){
-                    document.documentElement.classList.toggle('dark-theme');
-                    const mode = document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light';
-                    localStorage.setItem('theme', mode);
-                    updateThemeButtonIcon();
-                });
-            }
+        } catch (error) {
+            showNotification('Network error. Please try again.', 'error');
         }
-        function updateThemeButtonIcon(){
-            const btn = document.getElementById('themeToggle');
-            if (!btn) return;
-            const dark = document.documentElement.classList.contains('dark-theme');
-            btn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            btn.style.background = dark ? '#222' : '#fff';
-            btn.style.color = dark ? '#ffd166' : '#333';
-            btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
-        }
+    }
 
-        // Smooth Scrolling
-        function initializeSmoothScrolling() {
-            const links = document.querySelectorAll('a[href^="#"]');
+    async function authForgotPassword(email) {
+        const forgotButton = document.querySelector('#forgotPasswordForm .submit-btn');
+        forgotButton.innerHTML = '<span class="loading"></span> Sending...';
+        forgotButton.disabled = true;
+
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
             
-            links.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    const href = link.getAttribute('href');
-                    
-                    if (href.startsWith('#') && href !== '#') {
-                        e.preventDefault();
-                        const target = document.querySelector(href);
-                        
-                        if (target) {
-                            target.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }
-                    }
-                });
-            });
+            showNotification(data.msg, 'success');
+            return true;
+
+        } catch (error) {
+            console.error('Forgot Password Error:', error);
+            showNotification('Network error. Please try again.', 'error');
+            return false;
+        } finally {
+            forgotButton.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
+            forgotButton.disabled = false;
         }
+    }
 
-        // Add actions for feature cards (Jobs/Growth/Mentorship)
-        (function initializeExtraFeatureCardActions(){
-            document.addEventListener('DOMContentLoaded', function(){
-                const cards = document.querySelectorAll('.features .feature-card');
-                cards.forEach(card => {
-                    const titleEl = card.querySelector('h3');
-                    if (!titleEl) return;
-                    const title = titleEl.textContent.trim().toLowerCase();
-                    if (title.includes('job opportunities')) {
-                        card.style.cursor = 'pointer';
-                        card.addEventListener('click', function(){
-                            navigateToPage('jobs.html');
-                        });
-                    }
-                    if (title.includes('growth tracking')) {
-                        card.style.cursor = 'pointer';
-                        card.addEventListener('click', function(){
-                            showComingSoon('Growth Tracking', 'Track goals, milestones, and skills over time. Personalized dashboards, reminders, and progress insights are coming soon.');
-                        });
-                    }
-                    if (title.includes('expert mentorship')) {
-                        card.style.cursor = 'pointer';
-                        card.addEventListener('click', function(){
-                            showComingSoon('Expert Mentorship', 'Connect with verified mentors for 1:1 sessions, portfolio reviews, and career planning. Mentor bookings, ratings, and schedules are on the way.');
-                        });
-                    }
-                });
-            });
-        })();
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-
-        if (mobileMenuToggle && navMenu) {
-            mobileMenuToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                mobileMenuToggle.classList.toggle('active');
-            });
-        }
-
-        // Notification system
-        function showNotification(message, type = 'info') {
-            let container = document.getElementById('notificationContainer');
-            if (!container) {
-                container = document.createElement('div');
-                container.id = 'notificationContainer';
-                container.className = 'notification-container';
-                document.body.appendChild(container);
+    function authLogout(){ 
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
+    }
+    
+    function updateHeaderAuthState(){
+        const current = getCurrentUser();
+        const authButtons = document.querySelector('.auth-buttons');
+        const userMenu = document.getElementById('userMenu');
+        if (current){
+            if (authButtons) authButtons.style.display = 'none';
+            if (userMenu) {
+                document.getElementById('userNameLabel').textContent = current.name || 'Account';
+                document.getElementById('userEmailLabel').textContent = current.email;
+                userMenu.style.display = 'block';
             }
-            const notif = document.createElement('div');
-            notif.className = `notification ${type}`;
-            notif.innerHTML = message;
-            container.appendChild(notif);
-            setTimeout(() => {
-                notif.classList.add('show');
-            }, 10);
-            setTimeout(() => {
-                notif.classList.remove('show');
-                setTimeout(() => notif.remove(), 400);
-            }, 3000);
+        } else {
+            if (userMenu) userMenu.style.display = 'none';
+            if (authButtons) authButtons.style.display = 'flex';
         }
+    }
 
-        // Password Strength Validation
-        document.addEventListener('DOMContentLoaded', function() {
-            const pwInput = document.getElementById('signupPassword');
-            const pwReqs = {
-                length: document.getElementById('pw-length'),
-                upper: document.getElementById('pw-upper'),
-                lower: document.getElementById('pw-lower'),
-                number: document.getElementById('pw-number'),
-                special: document.getElementById('pw-special')
-            };
-            if (pwInput) {
-                pwInput.addEventListener('input', function() {
-                    const val = pwInput.value;
-                    // Check requirements
-                    const checks = {
-                        length: val.length >= 8,
-                        upper: /[A-Z]/.test(val),
-                        lower: /[a-z]/.test(val),
-                        number: /[0-9]/.test(val),
-                        special: /[^A-Za-z0-9]/.test(val)
-                    };
-                    Object.keys(pwReqs).forEach(key => {
-                        if (checks[key]) {
-                            pwReqs[key].classList.add('valid');
-                            pwReqs[key].classList.remove('invalid');
-                            pwReqs[key].querySelector('i').className = 'fas fa-check';
-                        } else {
-                            pwReqs[key].classList.remove('valid');
-                            pwReqs[key].classList.add('invalid');
-                            pwReqs[key].querySelector('i').className = 'fas fa-times';
-                        }
-                    });
-                });
-                // Prevent form submit if not all requirements met
-                const signupForm = document.getElementById('signupForm');
-                if (signupForm) {
-                    signupForm.addEventListener('submit', function(e) {
-                        const val = pwInput.value;
-                        const allValid = (
-                            val.length >= 8 &&
-                            /[A-Z]/.test(val) &&
-                            /[a-z]/.test(val) &&
-                            /[0-9]/.test(val) &&
-                            /[^A-Za-z0-9]/.test(val)
-                        );
-                        if (!allValid) {
-                            e.preventDefault();
-                            showNotification('Password does not meet all requirements.', 'error');
-                        }
+    // Theme Toggle
+    function initializeTheme(){
+        const toggle = document.getElementById('themeToggle');
+        const saved = localStorage.getItem('theme') || 'light';
+        if (saved === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+        } else {
+            document.documentElement.classList.remove('dark-theme');
+        }
+        updateThemeButtonIcon();
+        if (toggle){
+            toggle.addEventListener('click', function(){
+                document.documentElement.classList.toggle('dark-theme');
+                const mode = document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light';
+                localStorage.setItem('theme', mode);
+                updateThemeButtonIcon();
+            });
+        }
+    }
+    function updateThemeButtonIcon(){
+        const btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        const dark = document.documentElement.classList.contains('dark-theme');
+        btn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        btn.style.background = dark ? '#222' : '#fff';
+        btn.style.color = dark ? '#ffd166' : '#333';
+        btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+
+    // Smooth Scrolling
+    function initializeSmoothScrolling() {
+        const links = document.querySelectorAll('a[href^="#"]');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href.startsWith('#') && href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    // Feature Card Actions
+    (function initializeExtraFeatureCardActions(){
+        document.addEventListener('DOMContentLoaded', function(){
+            const cards = document.querySelectorAll('.features .feature-card');
+            cards.forEach(card => {
+                const titleEl = card.querySelector('h3');
+                if (!titleEl) return;
+                const title = titleEl.textContent.trim().toLowerCase();
+                if (title.includes('job') || title.includes('opportunities')) {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', function(){
+                        navigateToPage('jobs.html');
                     });
                 }
-            }
+                if (title.includes('growth tracking')) {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', function(){
+                        navigateToPage('growth.html');
+                    });
+                }
+                if (title.includes('expert mentorship')) {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', function(){
+                        navigateToPage('mentorship.html');
+                    });
+                }
+            });
         });
-    </script>
+    })();
+
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (mobileMenuToggle && navMenu) {
+        mobileMenuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+        });
+    }
+
+    // Notification system
+    function showNotification(message, type = 'info') {
+        let container = document.getElementById('notificationContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notificationContainer';
+            container.className = 'notification-container';
+            document.body.appendChild(container);
+        }
+        const notif = document.createElement('div');
+        notif.className = `notification ${type}`;
+        notif.innerHTML = message;
+        container.appendChild(notif);
+        setTimeout(() => {
+            notif.classList.add('show');
+        }, 10);
+        setTimeout(() => {
+            notif.classList.remove('show');
+            setTimeout(() => notif.remove(), 400);
+        }, 4000); // Increased time to 4s for readability
+    }
+
+    // Password Strength Validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const pwInput = document.getElementById('signupPassword');
+        const pwReqs = {
+            length: document.getElementById('pw-length'),
+            upper: document.getElementById('pw-upper'),
+            lower: document.getElementById('pw-lower'),
+            number: document.getElementById('pw-number'),
+            special: document.getElementById('pw-special')
+        };
+        if (pwInput) {
+            pwInput.addEventListener('input', function() {
+                const val = pwInput.value;
+                const checks = {
+                    length: val.length >= 8,
+                    upper: /[A-Z]/.test(val),
+                    lower: /[a-z]/.test(val),
+                    number: /[0-9]/.test(val),
+                    special: /[^A-Za-z0-9]/.test(val)
+                };
+                Object.keys(pwReqs).forEach(key => {
+                    if (checks[key]) {
+                        pwReqs[key].classList.add('valid');
+                        pwReqs[key].classList.remove('invalid');
+                        pwReqs[key].querySelector('i').className = 'fas fa-check';
+                    } else {
+                        pwReqs[key].classList.remove('valid');
+                        pwReqs[key].classList.add('invalid');
+                        pwReqs[key].querySelector('i').className = 'fas fa-times';
+                    }
+                });
+            });
+        }
+    });
+</script>
 
     <style>
         /* Additional Navigation Styles */
