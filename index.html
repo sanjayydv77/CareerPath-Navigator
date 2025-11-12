@@ -60,54 +60,64 @@
         <div id="mobileNavDropdown" class="mobile-nav-dropdown"><!-- Mobile menu will be populated here --></div>
         <!-- Header -->
         <header>
-            <div class="header-container">
-                <a href="#" class="logo">
-                    <i class="fas fa-compass"></i>
-                    CareerPath Navigator
-                </a>
-                
-                <nav>
-                    <ul class="nav-menu" id="navMenu">
-                        <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
-                        <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
-                        <li><a href="assessment.html" class="nav-link" data-page="assessment"><i class="fas fa-clipboard-check"></i> Assessment</a></li>
-                        <li><a href="streams.html" class="nav-link" data-page="streams"><i class="fas fa-stream"></i> Streams</a></li>
-                        <li><a href="colleges.html" class="nav-link" data-page="colleges"><i class="fas fa-university"></i> Colleges</a></li>
-                        <li><a href="jobs.html" class="nav-link" data-page="jobs"><i class="fas fa-briefcase"></i> Jobs</a></li>
-                        <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
-                        <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
-                    </ul>
-                </nav>
-                <div class="auth-buttons">
-                    <button class="btn-login">Login</button>
-                    <button class="btn-signup">Sign Up</button>
-                    <button class="btn-theme" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme" style="margin-left:0.5rem; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:20px; border:1px solid rgba(0,0,0,0.1); background:#fff; color:#333; cursor:pointer;"><i class="fas fa-moon"></i></button>
-                </div>
-                <div class="user-menu" id="userMenu" style="display:none;">
-                    <div class="user-avatar" id="userAvatar">
-                        <i class="fas fa-user-circle"></i>
-                        <span id="userNameLabel">Account</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="user-dropdown" id="userDropdown">
-                        <div class="dropdown-header">
-                            <strong id="userEmailLabel">Signed in</strong>
-                            <small>Welcome back</small>
-                        </div>
-                        <button class="dropdown-item" id="goToAssessment"><i class="fas fa-clipboard-check"></i> Assessment</button>
-                        <button class="dropdown-item" id="goToStreams"><i class="fas fa-stream"></i> Streams</button>
-                        <button class="dropdown-item" id="goToColleges"><i class="fas fa-university"></i> Colleges</button>
-                        <button class="dropdown-item" id="goToJobs"><i class="fas fa-briefcase"></i> Jobs</button>
-                        <div class="dropdown-divider"></div>
-                        <button class="dropdown-item text-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                    </div>
-                </div>
-                
-                <button class="mobile-menu-toggle" aria-label="Open menu" title="Menu">
-                    <i class="fas fa-bars" style="color:#111; text-shadow:0 1px 2px rgba(255,255,255,0.6);"></i>
-                </button>
+    <div class="header-container">
+        <a href="#" class="logo">
+            <i class="fas fa-compass"></i>
+            CareerPath Navigator
+        </a>
+        
+        <nav>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+                <li><a href="assessment.html" class="nav-link" data-page="assessment"><i class="fas fa-clipboard-check"></i> Assessment</a></li>
+                <li><a href="streams.html" class="nav-link" data-page="streams"><i class="fas fa-stream"></i> Streams</a></li>
+                <li><a href="colleges.html" class="nav-link" data-page="colleges"><i class="fas fa-university"></i> Colleges</a></li>
+                <li><a href="jobs.html" class="nav-link" data-page="jobs"><i class="fas fa-briefcase"></i> Jobs</a></li>
+                <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+        </nav>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+        
+            <div class="auth-buttons">
+                <button class="btn-login">Login</button>
+                <button class="btn-signup">Sign Up</button>
             </div>
-        </header>
+            
+            <div class="user-menu" id="userMenu" style="display:none;">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userNameLabel">Account</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">
+                        <strong id="userEmailLabel">Signed in</strong>
+                        <small>Welcome back</small>
+                    </div>
+                    
+                    <button class="dropdown-item" id="goToGrowth"><i class="fas fa-chart-line"></i> Growth</button>
+                    <button class="dropdown-item" id="goToMentorship"><i class="fas fa-chalkboard-teacher"></i> Mentorship</button>
+                    <button class="dropdown-item" id="goToJobs"><i class="fas fa-briefcase"></i> Jobs</button>
+                    <button class="dropdown-item" id="goToColleges"><i class="fas fa-university"></i> Colleges</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item text-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+            
+            <button class="btn-theme" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme" style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:20px; border:1px solid rgba(0,0,0,0.1); background:#fff; color:#333; cursor:pointer;">
+                <i class="fas fa-moon"></i>
+            </button>
+
+        </div>
+        
+        <button class="mobile-menu-toggle" aria-label="Open menu" title="Menu">
+            <i class="fas fa-bars" style="color:#111; text-shadow:0 1px 2px rgba(255,255,255,0.6);"></i>
+        </button>
+    </div>
+</header>
 
         <!-- Hero Section -->
         <section id="home" class="hero">
@@ -911,8 +921,8 @@
         }
         
         const navMap = [
-            ['goToAssessment','assessment.html'],
-            ['goToStreams','streams.html'],
+            ['goToGrowth','growth.html'],
+            ['goToMentorship','mentorship.html'],
             ['goToColleges','colleges.html'],
             ['goToJobs','jobs.html']
         ];

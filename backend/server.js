@@ -26,7 +26,7 @@ app.get('/', (req, res) => res.send('Career Counseling API Running...'));
 
 // Connect the authentication routes
 app.use('/api/auth', require('./routes/auth')); 
-
+app.use('/api/data', require('./routes/data'));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

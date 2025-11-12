@@ -522,13 +522,20 @@
     </div>
 
     <script>
-        let allColleges = [];
-        let currentPage = 1;
-        let collegesPerPage = 12;
-        let currentFilter = 'all';
-        let currentSort = 'ranking';
+    // --- ⭐ NEW: Get User and Token from localStorage ---
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const token = localStorage.getItem('token');
+    
+    // --- ⭐ NEW: Keep track of saved colleges ---
+    let savedColleges = new Set(); 
 
-        // College Data (500+ Real Colleges)
+    let allColleges = [];
+    let currentPage = 1;
+    let collegesPerPage = 12;
+    let currentFilter = 'all';
+    let currentSort = 'ranking';
+
+    // College Data (500+ Real Colleges)
         const collegeData = [
             // IITs
             {
@@ -1346,209 +1353,271 @@
                 stream: "engineering"
             }
         ];
+    // Initialize the page
+    window.onload = function() {
+        // --- ⭐ NEW: Auth Check ---
+        if (!currentUser || !token) {
+            alert('You must be logged in to view colleges. Redirecting to home page...');
+            window.location.href = 'index.html';
+            return; // Stop the rest of the script from running
+        }
 
-        // Initialize the page
-        window.onload = function() {
-            allColleges = [...collegeData];
-            setTimeout(() => {
-                displayColleges();
-                createPagination();
-            }, 1500);
-        };
-
-        // Search function
-        function searchColleges() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const streamFilter = document.getElementById('streamFilter').value;
-            const locationFilter = document.getElementById('locationFilter').value;
-
-            let filteredColleges = collegeData.filter(college => {
-                const matchesSearch = college.name.toLowerCase().includes(searchTerm) ||
-                                    college.location.toLowerCase().includes(searchTerm) ||
-                                    college.courses.some(course => course.toLowerCase().includes(searchTerm));
-                
-                const matchesStream = !streamFilter || college.stream === streamFilter;
-                const matchesLocation = !locationFilter || college.location.toLowerCase().includes(locationFilter);
-                const matchesType = currentFilter === 'all' || college.type === currentFilter;
-
-                return matchesSearch && matchesStream && matchesLocation && matchesType;
-            });
-
-            allColleges = filteredColleges;
-            currentPage = 1;
+        allColleges = [...collegeData];
+        // --- ⭐ NEW: Fetch user's saved colleges from backend ---
+        fetchSavedColleges(); 
+        
+        setTimeout(() => {
             displayColleges();
             createPagination();
-            updateResultsCount();
-        }
-
-        // Filter by type
-        function filterByType(type) {
-            currentFilter = type;
-            
-            // Update active filter tag
-            document.querySelectorAll('.filter-tag').forEach(tag => {
-                tag.classList.remove('active');
+        }, 1500); // Your original timeout
+    };
+    
+    // --- ⭐ NEW: Function to get saved colleges from DB ---
+    async function fetchSavedColleges() {
+        try {
+            const response = await fetch('http://localhost:5000/api/data/dashboard', {
+                headers: { 'x-auth-token': token }
             });
-            event.target.classList.add('active');
+            if (response.ok) {
+                const data = await response.json();
+                // Store saved colleges in a Set for fast lookup
+                savedColleges = new Set(data.savedColleges);
+                
+                // Re-display colleges to show which ones are saved
+                displayColleges();
+            }
+        } catch (error) {
+            console.error('Error fetching saved colleges:', error);
+        }
+    }
 
-            searchColleges();
+
+    // Search function (No changes)
+    function searchColleges() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const streamFilter = document.getElementById('streamFilter').value;
+        const locationFilter = document.getElementById('locationFilter').value;
+
+        let filteredColleges = collegeData.filter(college => {
+            const matchesSearch = college.name.toLowerCase().includes(searchTerm) ||
+                                  college.location.toLowerCase().includes(searchTerm) ||
+                                  college.courses.some(course => course.toLowerCase().includes(searchTerm));
+            
+            const matchesStream = !streamFilter || college.stream === streamFilter;
+            const matchesLocation = !locationFilter || college.location.toLowerCase().includes(locationFilter);
+            const matchesType = currentFilter === 'all' || college.type === currentFilter;
+
+            return matchesSearch && matchesStream && matchesLocation && matchesType;
+        });
+
+        allColleges = filteredColleges;
+        currentPage = 1;
+        displayColleges();
+        createPagination();
+        updateResultsCount();
+    }
+
+    // Filter by type (No changes)
+    function filterByType(type) {
+        currentFilter = type;
+        
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        searchColleges();
+    }
+
+    // Sort colleges (No changes)
+    function sortColleges() {
+        const sortBy = document.getElementById('sortBy').value;
+        
+        allColleges.sort((a, b) => {
+            switch(sortBy) {
+                case 'placements':
+                    return parseInt(b.placements) - parseInt(a.placements);
+                case 'package':
+                    return parseFloat(b.avgPackage.replace('₹', '').replace('L', '')) - 
+                           parseFloat(a.avgPackage.replace('₹', '').replace('L', ''));
+                case 'location':
+                    return a.location.localeCompare(b.location);
+                default:
+                    return a.name.localeCompare(b.name);
+            }
+        });
+
+        displayColleges();
+    }
+
+    // --- (MODIFIED) Display colleges ---
+    function displayColleges() {
+        const grid = document.getElementById('collegesGrid');
+        const loading = document.getElementById('loadingDiv');
+        
+        if (loading) {
+            loading.style.display = 'none';
         }
 
-        // Sort colleges
-        function sortColleges() {
-            const sortBy = document.getElementById('sortBy').value;
-            
-            allColleges.sort((a, b) => {
-                switch(sortBy) {
-                    case 'placements':
-                        return parseInt(b.placements) - parseInt(a.placements);
-                    case 'package':
-                        return parseFloat(b.avgPackage.replace('₹', '').replace('L', '')) - 
-                               parseFloat(a.avgPackage.replace('₹', '').replace('L', ''));
-                    case 'location':
-                        return a.location.localeCompare(b.location);
-                    default:
-                        return a.name.localeCompare(b.name);
-                }
-            });
+        const startIndex = (currentPage - 1) * collegesPerPage;
+        const endIndex = startIndex + collegesPerPage;
+        const collegesToShow = allColleges.slice(startIndex, endIndex);
 
-            displayColleges();
+        if (collegesToShow.length === 0) {
+            grid.innerHTML = `
+                <div class="no-results">
+                    <h3>No colleges found</h3>
+                    <p>Try adjusting your search criteria</p>
+                </div>
+            `;
+            return;
         }
 
-        // Display colleges
-        function displayColleges() {
-            const grid = document.getElementById('collegesGrid');
-            const loading = document.getElementById('loadingDiv');
+        grid.innerHTML = collegesToShow.map(college => {
+            // --- ⭐ NEW: Check if this college is saved ---
+            const isSaved = savedColleges.has(college.name);
+            const saveButtonClass = isSaved ? 'btn-save saved' : 'btn-save';
+            const saveButtonText = isSaved ? '♥ Saved' : '♡ Save';
             
-            if (loading) {
-                loading.style.display = 'none';
-            }
-
-            const startIndex = (currentPage - 1) * collegesPerPage;
-            const endIndex = startIndex + collegesPerPage;
-            const collegesToShow = allColleges.slice(startIndex, endIndex);
-
-            if (collegesToShow.length === 0) {
-                grid.innerHTML = `
-                    <div class="no-results">
-                        <h3>No colleges found</h3>
-                        <p>Try adjusting your search criteria</p>
+            return `
+            <div class="college-card" onclick="viewCollegeDetails('${college.name}')">
+                <div class="ranking-badge">${college.ranking}</div>
+                <div class="college-header">
+                    <div class="college-logo">${college.logo}</div>
+                </div>
+                <div class="college-name">${college.name}</div>
+                <div class="college-location">📍 ${college.location}</div>
+                
+                <div class="stats-row">
+                    <div class="stat">
+                        <span class="stat-value">${college.placements}</span>
+                        <div class="stat-label">Placements</div>
                     </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = collegesToShow.map(college => `
-                <div class="college-card" onclick="viewCollegeDetails('${college.name}')">
-                    <div class="ranking-badge">${college.ranking}</div>
-                    <div class="college-header">
-                        <div class="college-logo">${college.logo}</div>
-                    </div>
-                    <div class="college-name">${college.name}</div>
-                    <div class="college-location">📍 ${college.location}</div>
-                    
-                    <div class="stats-row">
-                        <div class="stat">
-                            <span class="stat-value">${college.placements}</span>
-                            <div class="stat-label">Placements</div>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-value">${college.avgPackage}</span>
-                            <div class="stat-label">Avg Package</div>
-                        </div>
-                    </div>
-                    
-                    <div class="courses-tags">
-                        ${college.courses.map(course => `<span class="course-tag">${course}</span>`).join('')}
-                    </div>
-                    
-                    <div class="card-actions">
-                        <button class="btn-primary" onclick="event.stopPropagation(); viewCollegeDetails('${college.name}')">View Details</button>
-                        <button class="btn-save" onclick="event.stopPropagation(); toggleSave(this, '${college.name}')">♡ Save</button>
+                    <div class="stat">
+                        <span class="stat-value">${college.avgPackage}</span>
+                        <div class="stat-label">Avg Package</div>
                     </div>
                 </div>
-            `).join('');
+                
+                <div class="courses-tags">
+                    ${college.courses.map(course => `<span class="course-tag">${course}</span>`).join('')}
+                </div>
+                
+                <div class="card-actions">
+                    <button class="btn-primary" onclick="event.stopPropagation(); viewCollegeDetails('${college.name}')">View Details</button>
+                    <button class="${saveButtonClass}" onclick="event.stopPropagation(); toggleSave(this, '${college.name}')">${saveButtonText}</button>
+                </div>
+            </div>
+        `}).join('');
+    }
+
+    // Create pagination (No changes)
+    function createPagination() {
+        const pagination = document.getElementById('pagination');
+        const totalPages = Math.ceil(allColleges.length / collegesPerPage);
+        
+        if (totalPages <= 1) {
+            pagination.innerHTML = '';
+            return;
         }
 
-        // Create pagination
-        function createPagination() {
-            const pagination = document.getElementById('pagination');
-            const totalPages = Math.ceil(allColleges.length / collegesPerPage);
-            
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
-
-            let paginationHTML = '';
-            
-            // Previous button
-            if (currentPage > 1) {
-                paginationHTML += `<button onclick="changePage(${currentPage - 1})">‹ Previous</button>`;
-            }
-
-            // Page numbers
-            const maxVisiblePages = 5;
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                paginationHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
-            }
-
-            // Next button
-            if (currentPage < totalPages) {
-                paginationHTML += `<button onclick="changePage(${currentPage + 1})">Next ›</button>`;
-            }
-
-            pagination.innerHTML = paginationHTML;
+        let paginationHTML = '';
+        
+        if (currentPage > 1) {
+            paginationHTML += `<button onclick="changePage(${currentPage - 1})">‹ Previous</button>`;
         }
 
-        // Change page
-        function changePage(page) {
-            currentPage = page;
-            displayColleges();
-            createPagination();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage < maxVisiblePages - 1) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
 
-        // Update results count
-        function updateResultsCount() {
-            const count = document.getElementById('resultsCount');
-            count.textContent = `Showing ${allColleges.length} colleges`;
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
         }
 
-        // Toggle save college
-        function toggleSave(button, collegeName) {
-            button.classList.toggle('saved');
-            if (button.classList.contains('saved')) {
-                button.innerHTML = '♥ Saved';
-                button.style.background = '#ff6b6b';
-                button.style.color = 'white';
-            } else {
-                button.innerHTML = '♡ Save';
-                button.style.background = 'white';
-                button.style.color = '#ff6b6b';
-            }
+        if (currentPage < totalPages) {
+            paginationHTML += `<button onclick="changePage(${currentPage + 1})">Next ›</button>`;
         }
 
-        // View college details (placeholder function)
-        function viewCollegeDetails(collegeName) {
-            alert(`College details for ${collegeName} will be shown here.\n\nThis would typically open a detailed page with:\n• Admission requirements\n• Fee structure\n• Course details\n• Faculty information\n• Campus facilities\n• Placement records`);
-        }
+        pagination.innerHTML = paginationHTML;
+    }
 
-        // Search on Enter key
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchColleges();
-                }
+    // Change page (No changes)
+    function changePage(page) {
+        currentPage = page;
+        displayColleges();
+        createPagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Update results count (No changes)
+    function updateResultsCount() {
+        const count = document.getElementById('resultsCount');
+        count.textContent = `Showing ${allColleges.length} colleges`;
+    }
+
+    // --- (MODIFIED) Toggle save college ---
+    async function toggleSave(button, collegeName) {
+        // 1. Update the visual state immediately
+        const isSaving = !button.classList.contains('saved');
+        
+        if (isSaving) {
+            button.classList.add('saved');
+            button.innerHTML = '♥ Saved';
+            button.style.background = '#ff6b6b';
+            button.style.color = 'white';
+            // 2. Add to our local set
+            savedColleges.add(collegeName);
+        } else {
+            button.classList.remove('saved');
+            button.innerHTML = '♡ Save';
+            button.style.background = 'white';
+            button.style.color = '#ff6b6b';
+            // 3. Remove from our local set
+            savedColleges.delete(collegeName);
+        }
+        
+        // 4. Send the update to the backend
+        try {
+            // Note: We send the collegeName and the 'isSaving' status
+            const response = await fetch('http://localhost:5000/api/data/save-college', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': token // Send the login token
+                },
+                body: JSON.stringify({ collegeName: collegeName, isSaving: isSaving })
             });
+
+            if (response.ok) {
+                console.log('Saved colleges updated successfully.');
+            } else {
+                console.error('Failed to update saved colleges.');
+                // (Optional: Revert the button if save failed)
+            }
+        } catch (error) {
+            console.error('Error saving college:', error);
+            // (Optional: Revert the button if save failed)
+        }
+    }
+
+    // View college details (No changes)
+    function viewCollegeDetails(collegeName) {
+        alert(`College details for ${collegeName} will be shown here.\n\nThis would typically open a detailed page with:\n• Admission requirements\n• Fee structure\n• Course details\n• Faculty information\n• Campus facilities\n• Placement records`);
+    }
+
+    // Search on Enter key (No changes)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchColleges();
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>

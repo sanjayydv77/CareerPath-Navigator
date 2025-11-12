@@ -339,6 +339,42 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+        
+        /* --- ⭐ NEW: Notification Styles --- */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+        }
+        .notification {
+            min-width: 220px;
+            max-width: 90vw;
+            margin: 0.5rem 0;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(.4,2,.6,1);
+            font-weight: 600;
+            pointer-events: auto;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .notification.success { background: #e6ffed; color: #1a7f37; border: 1px solid #b7ebc6; }
+        .notification.error { background: #fff1f0; color: #d7263d; border: 1px solid #ffb3b3; }
+        .notification.info { background: #eef2ff; color: #4441cf; border: 1px solid #b3b8ff; }
+
     </style>
 </head>
 <body>
@@ -364,7 +400,6 @@
         </div>
 
         <div class="mentors-grid" id="mentorsGrid">
-            <!-- Software Development Mentor -->
             <div class="mentor-card" data-category="technology">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -384,27 +419,17 @@
                     Specializes in helping engineers crack FAANG interviews and advance their careers. Expert in system design, data structures, and technical leadership.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">5+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">200+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.9</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">5+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">200+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.9</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$80/session</div>
                     <div class="session-duration">60 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('alex-chen')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Alex Chen')">Book Session</button>
             </div>
 
-            <!-- Data Science Mentor -->
             <div class="mentor-card" data-category="technology">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -424,27 +449,17 @@
                     Helps professionals transition into data science roles. Expert in ML algorithms, data visualization, and building impressive data science portfolios.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">8+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">150+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.8</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">8+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">150+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.8</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$90/session</div>
                     <div class="session-duration">75 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('sarah-williams')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Dr. Sarah Williams')">Book Session</button>
             </div>
 
-            <!-- UX/UI Design Mentor -->
             <div class="mentor-card" data-category="design">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -464,27 +479,17 @@
                     Specializes in portfolio optimization and case study development. Helps designers land roles at top tech companies through strategic design thinking.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">6+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">180+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.9</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">6+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">180+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.9</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$75/session</div>
                     <div class="session-duration">60 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('maria-rodriguez')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Maria Rodriguez')">Book Session</button>
             </div>
 
-            <!-- Business Strategy Mentor -->
             <div class="mentor-card" data-category="business">
                 <div class="availability busy">Next available: Tomorrow</div>
                 <div class="mentor-header">
@@ -504,27 +509,17 @@
                     Former consultant with expertise in business strategy, case interviews, and MBA applications. Helps professionals break into top consulting firms.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">10+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">250+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.9</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">10+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">250+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.9</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$120/session</div>
                     <div class="session-duration">90 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('james-patterson')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('James Patterson')">Book Session</button>
             </div>
 
-            <!-- Healthcare Professional -->
             <div class="mentor-card" data-category="healthcare">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -544,27 +539,17 @@
                     Guides pre-med students through medical school applications, MCAT preparation, and residency matching. Expert in healthcare career planning.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">7+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">120+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.8</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">7+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">120+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.8</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$85/session</div>
                     <div class="session-duration">60 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('emily-thompson')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Dr. Emily Thompson')">Book Session</button>
             </div>
 
-            <!-- Financial Advisor -->
             <div class="mentor-card" data-category="finance">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -584,27 +569,17 @@
                     Specializes in finance career transitions, investment banking interviews, and financial modeling. Helps students break into Wall Street.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">9+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">190+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.7</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">9+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">190+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.7</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$100/session</div>
                     <div class="session-duration">75 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('michael-chang')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Michael Chang')">Book Session</button>
             </div>
 
-            <!-- Product Manager -->
             <div class="mentor-card" data-category="technology">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -624,27 +599,17 @@
                     Expert in product management career transitions and interview preparation. Helps professionals break into PM roles at top tech companies.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">6+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">160+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.8</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">6+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">160+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.8</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$95/session</div>
                     <div class="session-duration">60 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('lisa-park')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Lisa Park')">Book Session</button>
             </div>
 
-            <!-- Marketing Professional -->
             <div class="mentor-card" data-category="business">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -664,27 +629,17 @@
                     Specializes in digital marketing strategies, brand building, and growth marketing. Helps professionals advance in marketing careers.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">8+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">140+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.7</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">8+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">140+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.7</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$70/session</div>
                     <div class="session-duration">60 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('david-kumar')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('David Kumar')">Book Session</button>
             </div>
 
-            <!-- Cybersecurity Expert -->
             <div class="mentor-card" data-category="technology">
                 <div class="availability busy">Next available: 2 days</div>
                 <div class="mentor-header">
@@ -704,27 +659,17 @@
                     Expert in cybersecurity career paths, certifications (CISSP, CEH), and security architecture. Helps professionals enter the cybersecurity field.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">10+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">130+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.9</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">10+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">130+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.9</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$110/session</div>
                     <div class="session-duration">75 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('jennifer-lee')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Jennifer Lee')">Book Session</button>
             </div>
 
-            <!-- Education Professional -->
             <div class="mentor-card" data-category="education">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -744,27 +689,17 @@
                     Guides students through PhD applications, research methodology, and academic career planning. Expert in transitioning from industry to academia.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">15+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.8</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">15+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">100+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.8</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$90/session</div>
                     <div class="session-duration">90 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('robert-davis')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Prof. Robert Davis')">Book Session</button>
             </div>
 
-            <!-- Graphic Designer -->
             <div class="mentor-card" data-category="design">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -784,27 +719,17 @@
                     Specializes in graphic design career development, brand identity creation, and building a successful freelance design business.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">12+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">170+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.8</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">12+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">170+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.8</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$65/session</div>
                     <div class="session-duration">60 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('amanda-foster')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Amanda Foster')">Book Session</button>
             </div>
 
-            <!-- Startup Entrepreneur -->
             <div class="mentor-card" data-category="business">
                 <div class="availability available">Available</div>
                 <div class="mentor-header">
@@ -824,35 +749,31 @@
                     Founded 3 successful startups with 2 exits. Helps aspiring entrepreneurs validate ideas, build MVPs, and navigate the startup ecosystem.
                 </div>
                 <div class="mentor-stats">
-                    <div class="stat">
-                        <div class="stat-number">12+</div>
-                        <div class="stat-label">Years Exp</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">200+</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">4.9</div>
-                        <div class="stat-label">Rating</div>
-                    </div>
+                    <div class="stat"><div class="stat-number">12+</div><div class="stat-label">Years Exp</div></div>
+                    <div class="stat"><div class="stat-number">200+</div><div class="stat-label">Sessions</div></div>
+                    <div class="stat"><div class="stat-number">4.9</div><div class="stat-label">Rating</div></div>
                 </div>
                 <div class="mentor-price">
                     <div class="price">$150/session</div>
                     <div class="session-duration">90 min session</div>
                 </div>
-                <button class="book-btn" onclick="bookSession('ryan-mitchell')">Book Session</button>
+                <button class="book-btn" onclick="bookSession('Ryan Mitchell')">Book Session</button>
             </div>
-        </div>
+            
+            </div>
     </div>
 
+    <div id="notificationContainer" class="notification-container"></div>
+
     <script>
+        // --- ⭐ NEW: Get User and Token from localStorage ---
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        const token = localStorage.getItem('token');
+
         function filterMentors(category) {
-            // Update active filter button
+            // (No changes to this function)
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-
-            // Filter mentor cards
             const mentorCards = document.querySelectorAll('.mentor-card');
             mentorCards.forEach(card => {
                 if (category === 'all' || card.dataset.category === category) {
@@ -871,8 +792,14 @@
             });
         }
 
-        function bookSession(mentorId) {
-            // Simulate booking process
+        // --- (MODIFIED) Book Session Function ---
+        async function bookSession(mentorName) {
+            // 1. Check if user is logged in
+            if (!currentUser || !token) {
+                showNotification('You must be logged in to book a session.', 'error');
+                return;
+            }
+
             const btn = event.target;
             const originalText = btn.textContent;
             
@@ -880,22 +807,72 @@
             btn.disabled = true;
             btn.style.opacity = '0.7';
             
-            setTimeout(() => {
-                alert(`Booking request sent! You will receive a confirmation email shortly for your session with ${mentorId.replace('-', ' ')}.`);
-                btn.textContent = 'Booking Sent ✓';
-                btn.style.background = '#28a745';
-                
-                setTimeout(() => {
+            try {
+                // 2. Send the booking to the backend
+                const response = await fetch('http://localhost:5000/api/data/book-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token // Send the login token
+                    },
+                    body: JSON.stringify({ mentorName: mentorName }) // Send the mentor's name
+                });
+
+                if (response.ok) {
+                    // 3. Show success notification
+                    btn.textContent = 'Booking Sent ✓';
+                    btn.style.background = '#28a745';
+                    showNotification('Booking request sent! Track it on your Growth Dashboard.', 'success');
+                } else {
+                    // 4. Handle errors
+                    const data = await response.json();
+                    showNotification(data.msg || 'Could not book session.', 'error');
                     btn.textContent = originalText;
                     btn.disabled = false;
                     btn.style.opacity = '1';
-                    btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-                }, 3000);
-            }, 2000);
+                }
+
+            } catch (error) {
+                console.error('Error booking session:', error);
+                showNotification('A network error occurred. Please try again.', 'error');
+                btn.textContent = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+
+        // --- ⭐ NEW: Notification Function ---
+        function showNotification(message, type = 'info') {
+            let container = document.getElementById('notificationContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notificationContainer';
+                container.className = 'notification-container';
+                document.body.appendChild(container);
+            }
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.innerHTML = message;
+            container.appendChild(notif);
+            setTimeout(() => {
+                notif.classList.add('show');
+            }, 10);
+            setTimeout(() => {
+                notif.classList.remove('show');
+                setTimeout(() => notif.remove(), 400);
+            }, 4000); // 4 seconds
         }
 
         // Add smooth transitions for mentor cards
         document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- ⭐ NEW: Auth Check ---
+            if (!currentUser || !token) {
+                alert('You must be logged in to view mentors. Redirecting to home page...');
+                window.location.href = 'index.html';
+                return; // Stop the rest of the script from running
+            }
+
             const mentorCards = document.querySelectorAll('.mentor-card');
             mentorCards.forEach((card, index) => {
                 card.style.opacity = '0';

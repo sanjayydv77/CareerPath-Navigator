@@ -1,4 +1,4 @@
-// models/User.js (Corrected)
+// models/User.js (Complete File - With Growth Dashboard Fields)
 
 const mongoose = require('mongoose');
 
@@ -32,25 +32,39 @@ const UserSchema = new mongoose.Schema({
         type: String 
     }, 
     
+    // --- Password Reset Fields ---
+    passwordResetToken: {
+        type: String
+    },
+    passwordResetExpires: {
+        type: Date
+    },
+    
     // --- Initial Data Recording ---
     schoolId: { 
         type: String 
-    },
-    assessmentData: { 
-        type: mongoose.Schema.Types.Mixed, 
-        default: null 
     },
     registeredAt: { 
         type: Date, 
         default: Date.now 
     },
 
-    // --- NEW: Fields for Password Reset ---
-    passwordResetToken: {
-        type: String
+    // --- ⭐ NEW: Growth Dashboard Fields ---
+    assessmentResult: {
+        type: Object, // Will store the results object from the quiz
+        default: null
     },
-    passwordResetExpires: {
-        type: Date
+    savedColleges: {
+        type: [String], // An array of college names
+        default: []
+    },
+    appliedJobs: {
+        type: [String], // An array of job titles
+        default: []
+    },
+    bookedSessions: {
+        type: [String], // An array of mentor names
+        default: []
     }
 });
 
