@@ -1,7 +1,7 @@
 // middleware/auth.js
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/user');
 
 // This function is our "gatekeeper"
 module.exports = async function(req, res, next) {
