@@ -99,6 +99,30 @@ router.post('/book-session', auth, async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+// --- ⭐ 5. NEW: APPLY TO JOB ---
+// @route   POST /api/data/apply-job
+// @desc    Save a job application to the user's list
+router.post('/apply-job', auth, async (req, res) => {
+    try {
+        const { jobTitle } = req.body;
+        if (!jobTitle) {
+            return res.status(400).json({ msg: 'Job title is required' });
+        }
 
+        const user = await User.findById(req.user.id);
+        
+        // Add to array only if it's not already there
+        if (!user.appliedJobs.includes(jobTitle)) {
+            user.appliedJobs.push(jobTitle);
+            await user.save();
+        }
+
+        res.json({ appliedJobs: user.appliedJobs });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
 
 module.exports = router;
