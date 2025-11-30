@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 // 2. Verification Email Function (No changes here)
 const sendVerificationEmail = async (email, token) => {
     
-    const verificationUrl = `http://localhost:5000/api/auth/verify?token=${token}`;
+    const verificationUrl = `https://future-fit-backend-fcmi.onrender.com/api/auth/verify?token=${token}`;
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
