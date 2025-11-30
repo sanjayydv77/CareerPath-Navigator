@@ -508,6 +508,18 @@
     <script>
     // Enhanced main.js functionality integrated
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Add this inside document.addEventListener('DOMContentLoaded', ...)
+    
+    function wakeUpServer() {
+        // This silently pings the server to wake it up
+        fetch('https://future-fit-backend-fcmi.onrender.com')
+            .then(() => console.log("✅ Server Woke Up!"))
+            .catch(err => console.log("⏳ Server Waking up..."));
+    }
+    
+    // Call it immediately when page loads
+    wakeUpServer();
         // ✅ REMOVED initializeWelcomeScreen() call.
         initializeModals();
         initializeNavigationBar();
@@ -866,12 +878,13 @@
         }
     }
 
-    async function authLogin(email, password){
+  async function authLogin(email, password){
         const loginButton = document.querySelector('#loginForm .submit-btn');
         loginButton.innerHTML = '<span class="loading"></span> Logging In...';
         loginButton.disabled = true;
 
         try {
+            // 🚨 THIS IS THE FIX: Using the live Render URL explicitly
             const response = await fetch('https://future-fit-backend-fcmi.onrender.com/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
