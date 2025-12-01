@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
-    // ⚠️ IMPORTANT: When testing locally, change this to http://localhost:5000
+    // ⚠️ IMPORTANT: When testing locally, change this to https://future-fit-backend-fcmi.onrender.com
     // When deploying, change back to https://future-fit.vercel.app
     const verificationUrl = `http://127.0.0.1:3000/index.html#?verified=true&token=${token}`;
 
