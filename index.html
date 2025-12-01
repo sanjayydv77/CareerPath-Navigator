@@ -419,7 +419,7 @@
     </div>
 
     <div id="notificationContainer" class="notification-container"></div>
-    <div id="loginModal" class="modal">
+    <!-- <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div class="modal-header">
@@ -503,8 +503,114 @@
                 </button>
             </form>
         </div>
+    </div> -->
+<div id="loginModal" class="modal">
+        <div class="modal-content modern-modal">
+            <div class="modal-header-stylish">
+                <button class="close-modern close">&times;</button>
+                <h2>Welcome Back!</h2>
+                <p>Unlock your career potential</p>
+            </div>
+            
+            <div class="modal-body-stylish">
+                <form id="loginForm">
+                    <div class="input-group-modern">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="loginEmail" placeholder="Email Address" required>
+                    </div>
+                    
+                    <div class="input-group-modern">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+
+                    <div class="forgot-link-wrapper">
+                        <a href="#" id="forgotPasswordLink" class="modern-link">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-modern-submit submit-btn">
+                        <span>Login to Future-Fit</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="modal-footer-stylish">
+                <p>New here? <a href="#" onclick="document.getElementById('loginModal').style.display='none'; document.getElementById('signupModal').style.display='block';">Create Account</a></p>
+            </div>
+        </div>
     </div>
 
+    <div id="signupModal" class="modal">
+        <div class="modal-content modern-modal">
+            <div class="modal-header-stylish signup-header">
+                <button class="close-modern close">&times;</button>
+                <h2>Join Future-Fit</h2>
+                <p>Start your journey today</p>
+            </div>
+            
+            <div class="modal-body-stylish">
+                <form id="signupForm">
+                    <div class="input-group-modern">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="signupName" placeholder="Full Name" required>
+                    </div>
+
+                    <div class="input-group-modern">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="signupEmail" placeholder="Email Address" required>
+                    </div>
+                    
+                    <div class="input-group-modern">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="signupPassword" placeholder="Create Password" required>
+                    </div>
+
+                    <ul id="passwordRequirements" class="modern-requirements">
+                        <li id="pw-length" class="invalid"><i class="fas fa-circle"></i> 8+ Characters</li>
+                        <li id="pw-upper" class="invalid"><i class="fas fa-circle"></i> Uppercase</li>
+                        <li id="pw-number" class="invalid"><i class="fas fa-circle"></i> Number</li>
+                    </ul>
+
+                    <button type="submit" class="btn-modern-submit signup-btn-color submit-btn">
+                        <span>Create Account</span>
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                </form>
+            </div>
+             <div class="modal-footer-stylish">
+                <p>Already have an account? <a href="#" onclick="document.getElementById('signupModal').style.display='none'; document.getElementById('loginModal').style.display='block';">Login</a></p>
+            </div>
+        </div>
+    </div>
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content modern-modal">
+            
+            <div class="modal-header-stylish" style="background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%);">
+                <button class="close-modern close">&times;</button>
+                <h2>Reset Password</h2>
+                <p>Don't worry, it happens to the best of us.</p>
+            </div>
+            
+            <div class="modal-body-stylish">
+                <form id="forgotPasswordForm">
+                    <div class="input-group-modern">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="forgotEmail" placeholder="Enter your registered email" required>
+                    </div>
+
+                    <button type="submit" class="btn-modern-submit submit-btn" style="background: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%) !important; box-shadow: 0 10px 20px -10px rgba(255, 94, 98, 0.5);">
+                        <span>Send Reset Link</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="modal-footer-stylish">
+                <p>Remembered it? <a href="#" style="color: #ff5e62;" onclick="document.getElementById('forgotPasswordModal').style.display='none'; document.getElementById('loginModal').style.display='block';">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
     <script>
     // Enhanced main.js functionality integrated
     document.addEventListener('DOMContentLoaded', function() {
@@ -1592,6 +1698,205 @@
         .forgot-password-link a:hover {
             color: #764ba2;
         }
+        /* --- MODERN AUTH MODAL STYLES (Overrides) --- */
+
+/* Reset the default modal content style to fit the new design */
+.modal-content.modern-modal {
+    background: #fff;
+    border-radius: 24px;
+    padding: 0; 
+    border: none;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 420px;
+    width: 90%;
+}
+
+@keyframes modalPop {
+    0% { opacity: 0; transform: translateY(50px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Vibrant Header */
+.modal-header-stylish {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px 30px 30px;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+.signup-header {
+    background: linear-gradient(135deg, #4ecdc4 0%, #556270 100%);
+}
+
+.modal-header-stylish h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: white !important; /* Force white text */
+}
+
+.modal-header-stylish p {
+    margin: 5px 0 0;
+    opacity: 0.9;
+    font-size: 0.95rem;
+    color: white !important;
+}
+
+/* Close Button Override */
+.close-modern {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255,255,255,0.2) !important;
+    border: none;
+    color: white !important;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: none; /* Remove old float */
+    opacity: 1; /* Fix opacity */
+}
+.close-modern:hover {
+    background: rgba(255,255,255,0.4) !important;
+    transform: rotate(90deg);
+    color: white !important;
+}
+
+/* Form Body */
+.modal-body-stylish {
+    padding: 35px 30px 20px;
+}
+
+/* Input Groups */
+.input-group-modern {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.input-group-modern input {
+    width: 100%;
+    padding: 14px 14px 14px 45px;
+    border: 2px solid #edf2f7;
+    background: #f7fafc;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #4a5568;
+    transition: all 0.3s ease;
+    outline: none;
+    margin: 0; /* Reset margin */
+}
+
+.input-group-modern input:focus {
+    background: #fff;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.input-group-modern input:focus + .input-icon {
+    color: #667eea;
+}
+
+/* Links */
+.forgot-link-wrapper {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+.modern-link {
+    color: #718096;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+.modern-link:hover {
+    color: #667eea;
+    text-decoration: underline;
+}
+
+/* Button Overrides (Important to override .submit-btn) */
+.btn-modern-submit {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 20px -10px rgba(118, 75, 162, 0.5);
+}
+
+.signup-btn-color {
+    background: linear-gradient(90deg, #4ecdc4 0%, #556270 100%) !important;
+    box-shadow: 0 10px 20px -10px rgba(78, 205, 196, 0.5);
+}
+
+.btn-modern-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -10px rgba(0,0,0,0.3);
+}
+
+/* Footer */
+.modal-footer-stylish {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #edf2f7;
+    color: #718096;
+    font-size: 0.95rem;
+}
+.modal-footer-stylish a {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Password Requirements */
+.modern-requirements {
+    list-style: none;
+    padding: 0;
+    margin: -10px 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.modern-requirements li {
+    font-size: 0.75rem;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.modern-requirements li.valid {
+    color: #48bb78;
+}
     </style>
 </body>
 </html>
