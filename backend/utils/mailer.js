@@ -1,20 +1,19 @@
 const nodemailer = require('nodemailer');
 
-// --- UPDATED CONFIGURATION FOR RENDER ---
+// Standard Gmail Transport (Reliable)
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    requireTLS: true,
+    service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS  
+        user: process.env.EMAIL_USER, // Your gmail
+        pass: process.env.EMAIL_PASS  // Your 16-char App Password
     }
 });
 
-// 2. Verification Email Function
+// 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
-    // Ensure this points to your live Vercel site
+    // IMPORTANT: This link points to your Vercel Frontend
+    // When testing locally, clicking this will open the live site (which is fine)
+    // OR you can change this to http://127.0.0.1:5500 if using Live Server
     const verificationUrl = `https://future-fit.vercel.app/index.html?verified=true&token=${token}`;
 
     const mailOptions = {
@@ -22,51 +21,44 @@ const sendVerificationEmail = async (email, token) => {
         to: email,
         subject: 'Future-Fit: Verify Your Email',
         html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-                <h2>Welcome to Future-Fit!</h2>
-                <p>Please click the link below to verify your email address:</p>
-                <a href="${verificationUrl}" style="background-color: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verify Email</a>
-                <p>Or copy this link: ${verificationUrl}</p>
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                <h2 style="color: #667eea;">Welcome to Future-Fit!</h2>
+                <p>Please click the button below to verify your email address and activate your account.</p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${verificationUrl}" style="background-color: #667eea; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Verify My Email</a>
+                </div>
+                <p style="color: #666; font-size: 12px;">If the button doesn't work, copy this link: <br> ${verificationUrl}</p>
             </div>
         `
     };
 
-    try {
-        console.log(`Attempting to send email to ${email}...`);
-        await transporter.sendMail(mailOptions);
-        console.log(`✅ Email sent successfully to ${email}`);
-    } catch (error) {
-        console.error(`❌ Email Error: ${error.message}`);
-        // We throw the error so the auth route knows it failed
-        throw error;
-    }
+    // We use 'await' to ensure it sends before continuing
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Verification email sent successfully to ${email}`);
 };
 
-// 3. Password Reset Email Function
+// 2. Password Reset Email
 const sendPasswordResetEmail = async (email, token) => {
     const resetUrl = `https://future-fit.vercel.app/reset-password.html?token=${token}`;
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: 'Future-Fit: Reset Password',
+        subject: 'Future-Fit: Password Reset Request',
         html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-                <h2>Reset Your Password</h2>
-                <p>Click below to reset your password:</p>
-                <a href="${resetUrl}" style="background-color: #e74c3c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
-                <p>Link: ${resetUrl}</p>
+            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                <h2 style="color: #e74c3c;">Reset Password</h2>
+                <p>You requested a password reset. Click the button below to proceed.</p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${resetUrl}" style="background-color: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+                </div>
+                <p style="color: #666; font-size: 12px;">Link expires in 1 hour.</p>
             </div>
         `
     };
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Password reset email sent to ${email}`);
-    } catch (error) {
-        console.error(`❌ Reset Email Error: ${error.message}`);
-        throw error;
-    }
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Password reset email sent to ${email}`);
 };
 
 module.exports = {

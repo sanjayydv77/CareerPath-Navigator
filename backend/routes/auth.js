@@ -1,179 +1,92 @@
-// backend/routes/auth.js
-// COMPLETE & FIXED FILE
-
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-
-// ✅ FIX 1: Ensure this matches your filename exactly (lowercase 'u')
-const User = require('../models/user'); 
-
-// Import email utilities
+const User = require('../models/user'); // Ensure filename is lowercase 'user'
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/mailer');
 
 // @route   POST /api/auth/signup
-// @desc    Register a new user
 router.post('/signup', async (req, res) => {
-    console.log("🔹 1. Signup Request Received:", req.body.email);
-
     const { name, email, password, role } = req.body;
 
-    // 1. Basic Validation
+    // 1. Validation
     if (!name || !email || !password || !role) {
-        console.log("❌ Missing fields");
         return res.status(400).json({ msg: 'Please enter all fields.' });
     }
 
     try {
-        // 2. Check if user exists
+        // 2. Check existing user
         let user = await User.findOne({ email: email });
         if (user) {
-            console.log("❌ User already exists");
             return res.status(400).json({ msg: 'User with this email already exists.' });
         }
 
-        // 3. Create User Object
+        // 3. Create User
         user = new User({
             name,
             email,
             password,
             role,
             verificationToken: crypto.randomBytes(20).toString('hex'),
-            isVerified: false // Force false initially
+            isVerified: false
         });
 
         // 4. Hash Password
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
 
-     // 5. Save to Database
+        // 5. Save User
         await user.save();
-        console.log("✅ 2. User Saved to Database");
+        console.log("✅ User saved to DB");
 
-        // 6. Send Email in BACKGROUND (Fire and Forget)
-        // We removed 'await' so the code continues immediately
-        sendVerificationEmail(user.email, user.verificationToken)
-            .then(() => console.log("✅ Email sent in background"))
-            .catch(err => console.error("❌ Background Email Error:", err.message));
-
-        // 7. Send Success Response IMMEDIATELY
-        res.status(201).json({ 
-            msg: 'Registration successful! Please check your email to verify your account.' 
-        });
-
-    } catch (err) {
-        console.error("❌ SERVER ERROR:", err.message);
-        res.status(500).send('Server Error');
-    }
-});
-
-// @route   GET /api/auth/verify
-// @desc    Verify user email with token
-router.get('/verify', async (req, res) => {
-    try {
-        const token = req.query.token;
-        if (!token) return res.status(400).send('Verification failed: No token provided.');
-
-        const user = await User.findOne({ verificationToken: token });
-        if (!user) return res.status(400).send('Verification failed: Token is invalid or has expired.');
-
-        user.isVerified = true;
-        user.verificationToken = undefined;
-        await user.save();
-
-        // ✅ FIX 2: Ensure this points to your LIVE Vercel URL
-        // CHANGE THIS LINK if your frontend is deployed elsewhere
-        const frontendURL = 'https://future-fit.vercel.app'; 
-        
-        res.redirect(`${frontendURL}/index.html?verified=true`);
+        // 6. Send Email (WAIT for it to finish)
+        try {
+            await sendVerificationEmail(user.email, user.verificationToken);
+            console.log("✅ Email sent successfully");
+            
+            res.status(201).json({ 
+                msg: 'Registration successful! Please check your email to verify your account.' 
+            });
+        } catch (emailError) {
+            console.error("❌ Email Sending Failed:", emailError.message);
+            
+            // If email fails, delete the user so they can try again with a correct email
+            await User.findByIdAndDelete(user.id);
+            
+            return res.status(500).json({ 
+                msg: 'Failed to send verification email. Please check the email address and try again.' 
+            });
+        }
 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error during verification.');
+        res.status(500).send('Server Error');
     }
 });
 
 // @route   POST /api/auth/signin
-// @desc    Sign in a user
 router.post('/signin', async (req, res) => {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ msg: 'Please enter all fields.' });
-    }
+    if (!email || !password) return res.status(400).json({ msg: 'Please enter all fields.' });
 
     try {
-        // Check for user
         const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials. User not found.' });
-        }
+        if (!user) return res.status(400).json({ msg: 'Invalid credentials. User not found.' });
 
-        // Check verification
         if (!user.isVerified) {
-            return res.status(401).json({ 
-                msg: 'Account not verified. Please check your email.' 
-            });
+            return res.status(401).json({ msg: 'Account not verified. Please check your email.' });
         }
 
-        // Check password
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials. Password incorrect.' });
-        }
+        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials. Password incorrect.' });
 
-        // Create Token
-        const payload = {
-            user: {
-                id: user.id,
-                name: user.name,
-                role: user.role
-            }
-        };
+        const payload = { user: { id: user.id, name: user.name, role: user.role } };
 
-        jwt.sign(
-            payload,
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' },
-            (err, token) => {
-                if (err) throw err;
-                res.json({
-                    token,
-                    user: {
-                        id: user.id,
-                        name: user.name,
-                        email: user.email,
-                        role: user.role
-                    }
-                });
-            }
-        );
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-    }
-});
-
-// @route   POST /api/auth/resend
-// @desc    Resend verification email
-router.post('/resend', async (req, res) => {
-    try {
-        const { email } = req.body;
-        if (!email) return res.status(400).json({ msg: 'Please provide an email.' });
-
-        const user = await User.findOne({ email });
-
-        if (!user) return res.json({ msg: 'If account exists, email sent.' });
-        if (user.isVerified) return res.status(400).json({ msg: 'Account already verified.' });
-
-        user.verificationToken = crypto.randomBytes(20).toString('hex');
-        await user.save();
-        
-        await sendVerificationEmail(user.email, user.verificationToken);
-        res.json({ msg: 'New verification link sent.' });
-
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+            if (err) throw err;
+            res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -181,21 +94,29 @@ router.post('/resend', async (req, res) => {
 });
 
 // @route   POST /api/auth/forgot-password
-// @desc    Send password reset email
 router.post('/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.json({ msg: 'If email exists, reset link sent.' });
+        
+        // Security: Don't reveal if user exists
+        if (!user) return res.json({ msg: 'If your email is registered, a reset link has been sent.' });
 
         const resetToken = crypto.randomBytes(20).toString('hex');
         user.passwordResetToken = resetToken;
         user.passwordResetExpires = Date.now() + 3600000; // 1 hour
 
         await user.save();
-        await sendPasswordResetEmail(user.email, resetToken);
 
-        res.json({ msg: 'Reset link sent to your email.' });
+        // Send Email (WAIT for it)
+        try {
+            await sendPasswordResetEmail(user.email, resetToken);
+            res.json({ msg: 'If your email is registered, a reset link has been sent.' });
+        } catch (error) {
+            console.error("❌ Email Failed:", error.message);
+            return res.status(500).json({ msg: 'Failed to send email.' });
+        }
+
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -203,7 +124,6 @@ router.post('/forgot-password', async (req, res) => {
 });
 
 // @route   POST /api/auth/reset-password
-// @desc    Reset password via token
 router.post('/reset-password', async (req, res) => {
     try {
         const { token, password } = req.body;
@@ -212,7 +132,7 @@ router.post('/reset-password', async (req, res) => {
             passwordResetExpires: { $gt: Date.now() }
         });
 
-        if (!user) return res.status(400).json({ msg: 'Token invalid or expired.' });
+        if (!user) return res.status(400).json({ msg: 'Token is invalid or has expired.' });
 
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
@@ -220,9 +140,46 @@ router.post('/reset-password', async (req, res) => {
         user.passwordResetExpires = undefined;
 
         await user.save();
-        res.json({ msg: 'Password reset successful. Please login.' });
+        res.json({ msg: 'Password reset successful! You can now log in.' });
+
     } catch (err) {
         console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   GET /api/auth/verify
+router.get('/verify', async (req, res) => {
+    try {
+        const token = req.query.token;
+        const user = await User.findOne({ verificationToken: token });
+        if (!user) return res.status(400).send('Invalid token.');
+
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        await user.save();
+
+        // Redirect to Vercel
+        res.redirect('https://future-fit.vercel.app/index.html?verified=true');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST /api/auth/resend
+router.post('/resend', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user || user.isVerified) return res.status(400).json({ msg: 'Invalid request.' });
+
+        user.verificationToken = crypto.randomBytes(20).toString('hex');
+        await user.save();
+        await sendVerificationEmail(user.email, user.verificationToken);
+        
+        res.json({ msg: 'Verification link resent.' });
+    } catch (err) {
         res.status(500).send('Server Error');
     }
 });
