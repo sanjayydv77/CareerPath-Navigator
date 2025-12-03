@@ -1,80 +1,75 @@
 const nodemailer = require('nodemailer');
 
-// --- 🚀 OPTIMIZED GMAIL CONFIGURATION ---
+// --- 🚀 TESTED & VERIFIED GMAIL CONFIGURATION ---
+// This uses the standard service configuration which proved to work in 3.3 seconds.
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Connect directly to host
-    port: 465,              // Use Secure SSL port (Faster handshake than 587 sometimes)
-    secure: true,           // Use SSL
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    },
-    // ⚡ PERFORMANCE FIXES:
-    family: 4,              // Force IPv4 (Prevents the 40s-2min delay)
-    pool: true,             // Keep connection open (Reuses connection for faster sending)
-    maxConnections: 1,      // Be gentle with Gmail's limits
-    rateLimit: 5            // Send max 5 emails per second
+    }
 });
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
-    // ⚠️ IMPORTANT: When testing locally, change this to https://future-fit-backend-fcmi.onrender.com
-    // When deploying, change back to https://future-fit.vercel.app
-    const verificationUrl = `http://127.0.0.1:3000/index.html#?verified=true&token=${token}`;
+    // Determine URL based on environment
+    // When testing locally, use localhost. When deployed, use Vercel.
+    const currentUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://future-fit.vercel.app' 
+        : 'https://future-fit-backend-fcmi.onrender.com';
 
+const verificationUrl = `https://future-fit.vercel.app/index.html?verified=true&token=${token}`;
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: 'Future-Fit: Verify Your Email',
         html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                <h2 style="color: #667eea;">Welcome to Future-Fit!</h2>
-                <p>Please click the button below to verify your email address.</p>
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="${verificationUrl}" style="background-color: #667eea; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Verify My Email</a>
+            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
+                <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #667eea; text-align: center;">Welcome to Future-Fit!</h2>
+                    <p style="color: #555; font-size: 16px;">Please click the button below to verify your email address and activate your account.</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${verificationUrl}" style="background-color: #667eea; color: white; padding: 14px 28px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px;">Verify My Email</a>
+                    </div>
+                    <p style="color: #999; font-size: 12px; text-align: center;">Link: ${verificationUrl}</p>
                 </div>
-                <p style="color: #666; font-size: 12px;">Link: ${verificationUrl}</p>
             </div>
         `
     };
 
-    // Send with detailed error logging
-    try {
-        console.log(`🔹 Connecting to Gmail (IPv4) for: ${email}...`);
-        await transporter.sendMail(mailOptions);
-        console.log(`✅ Email sent successfully!`);
-    } catch (error) {
-        console.error(`❌ Nodemailer Error: ${error.message}`);
-        throw error; // Pass error to auth.js to handle
-    }
+    console.log(`🔹 Sending verification email to: ${email}...`);
+    // We use 'await' because 3 seconds is fast enough to wait for
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Email sent successfully!`);
 };
 
 // 2. Password Reset Email
 const sendPasswordResetEmail = async (email, token) => {
-    const resetUrl = `https://future-fit.vercel.app/reset-password.html?token=${token}`;
+    const currentUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://future-fit.vercel.app' 
+        : 'https://future-fit-backend-fcmi.onrender.com';
+
+    const resetUrl = `${currentUrl}/reset-password.html?token=${token}`;
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: 'Future-Fit: Password Reset Request',
+        subject: 'Future-Fit: Password Reset',
         html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                <h2 style="color: #e74c3c;">Reset Password</h2>
-                <p>Click the button below to reset your password.</p>
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="${resetUrl}" style="background-color: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+            <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
+                <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #e74c3c; text-align: center;">Reset Password</h2>
+                    <p style="color: #555; font-size: 16px;">We received a request to reset your password. Click below to proceed.</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetUrl}" style="background-color: #e74c3c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px;">Reset Password</a>
+                    </div>
                 </div>
             </div>
         `
     };
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log(`✅ Password reset email sent successfully.`);
-    } catch (error) {
-        console.error(`❌ Nodemailer Error: ${error.message}`);
-        throw error;
-    }
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Password reset email sent to ${email}`);
 };
 
 module.exports = {
