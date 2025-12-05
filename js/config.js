@@ -3,5 +3,5 @@ const config = {
     // Change this URL when you deploy your backend
     // For local development, keep it as https://future-fit-backend-fcmi.onrender.com
     // For production, change it to your Render/Railway URL (e.g., https://careerpath-api.onrender.com)
-    API_BASE_URL: 'https://future-fit-backend-fcmi.onrender.com'
+    API_BASE_URL: 'http://localhost:5000'
 };
