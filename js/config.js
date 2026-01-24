@@ -7,5 +7,5 @@ const config = {
     // Automatically detect environment
     API_BASE_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:5000'
-        : 'YOUR_RENDER_BACKEND_URL_HERE'  // Replace with: https://your-app.onrender.com
+        : 'https://future-fit-backend-bgp9.onrender.com'
 };
