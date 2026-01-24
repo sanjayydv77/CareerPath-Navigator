@@ -42,7 +42,15 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.error('❌ DB Connection Error:', err));
 
 // --- Routes ---
-app.get('/', (req, res) => res.send('Career Counseling API Running...'));
+app.get('/', (req, res) => {
+    res.json({
+        status: 'Career Counseling API Running...',
+        version: '2.0-PRODUCTION-URLS',
+        timestamp: new Date().toISOString(),
+        verificationUrl: 'https://future-fit-backend-bgp9.onrender.com/api/auth/verify',
+        resetUrl: 'https://future-fit.netlify.app/reset-password.html'
+    });
+});
 
 // Connect the authentication routes
 app.use('/api/auth', require('./routes/auth')); 
