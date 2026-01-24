@@ -159,9 +159,9 @@ router.get('/verify', async (req, res) => {
         user.verificationToken = undefined;
         await user.save();
 
-        // Redirect to Vercel
-        // res.redirect('https://future-fit.vercel.app/index.html?verified=true');
-        res.redirect('http://localhost:3000/index.html?verified=true');
+        // Redirect to frontend after verification
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+        res.redirect(`${frontendUrl}/index.html?verified=true`);
 
     } catch (err) {
         console.error(err.message);

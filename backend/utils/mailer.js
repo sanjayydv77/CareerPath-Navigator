@@ -13,14 +13,11 @@ const transporter = nodemailer.createTransport({
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
     // Determine URL based on environment
-    // When testing locally, use localhost. When deployed, use Vercel.
-    const currentUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://future-fit.vercel.app' 
+    const backendUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://future-fit-backend-bgp9.onrender.com' 
         : 'http://localhost:5000';
 
-// const verificationUrl = `https://future-fit.vercel.app/index.html?verified=true&token=${token}`;
-const verificationUrl = `http://localhost:5000/api/auth/verify?token=${token}`;
-
+    const verificationUrl = `${backendUrl}/api/auth/verify?token=${token}`;
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
@@ -48,13 +45,11 @@ const verificationUrl = `http://localhost:5000/api/auth/verify?token=${token}`;
 
 // 2. Password Reset Email
 const sendPasswordResetEmail = async (email, token) => {
-    // const currentUrl = process.env.NODE_ENV === 'production' 
-    //     ? 'https://future-fit.vercel.app' 
-    //     : 'http://localhost:5000';
-const resetUrl = `http://localhost:3000/reset-password.html?token=${token}`;
+    const frontendUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://future-fit.netlify.app' 
+        : 'http://localhost:3000';
 
-    // const resetUrl = `${currentUrl}/reset-password.html?token=${token}`;
-
+    const resetUrl = `${frontendUrl}/reset-password.html?token=${token}`;
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
