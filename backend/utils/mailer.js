@@ -12,12 +12,12 @@ const transporter = nodemailer.createTransport({
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
-    // Determine URL based on environment
-    const backendUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://future-fit-backend-bgp9.onrender.com' 
-        : 'http://localhost:5000';
-
+    // Always use production URLs - Render deployment
+    const backendUrl = 'https://future-fit-backend-bgp9.onrender.com';
     const verificationUrl = `${backendUrl}/api/auth/verify?token=${token}`;
+
+    console.log(`📧 NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`🔗 Verification URL: ${verificationUrl}`);
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
@@ -45,11 +45,12 @@ const sendVerificationEmail = async (email, token) => {
 
 // 2. Password Reset Email
 const sendPasswordResetEmail = async (email, token) => {
-    const frontendUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://future-fit.netlify.app' 
-        : 'http://localhost:3000';
-
+    // Always use production URLs - Netlify deployment
+    const frontendUrl = 'https://future-fit.netlify.app';
     const resetUrl = `${frontendUrl}/reset-password.html?token=${token}`;
+
+    console.log(`📧 NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`🔗 Reset URL: ${resetUrl}`);
 
     const mailOptions = {
         from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
