@@ -12,7 +12,27 @@ const app = express();
 
 // --- Middleware ---
 // Enable CORS for frontend connection
-app.use(cors()); 
+const allowedOrigins = [
+    'http://localhost:5500',
+    'http://localhost:3000',
+    'http://127.0.0.1:5500',
+    process.env.FRONTEND_URL // Your Netlify URL
+].filter(Boolean); // Remove undefined values
+
+app.use(cors({
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps, Postman, or curl)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
+
 // Body parser to accept JSON data from frontend forms
 app.use(express.json()); 
 
