@@ -1,13 +1,19 @@
-// --- 🚀 SENDGRID EMAIL SERVICE (PRODUCTION-READY) ---
-// SendGrid is reliable with cloud hosting providers (Render, Heroku, etc.)
-// No SMTP timeouts, fast delivery, 100 free emails/day
-const sgMail = require('@sendgrid/mail');
+// --- 🚀 BREVO (SENDINBLUE) EMAIL SERVICE - TRULY FREE ---
+// 300 emails/day, no credit card required, works perfectly with Render
+const nodemailer = require('nodemailer');
 
-// Set SendGrid API Key
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// Brevo SMTP Configuration
+const transporter = nodemailer.createTransport({
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.BREVO_SMTP_USER, // Your Brevo login email
+        pass: process.env.BREVO_SMTP_KEY   // Your Brevo SMTP key
+    }
+});
 
-// Sender email (must be verified in SendGrid)
-const SENDER_EMAIL = process.env.SENDGRID_SENDER_EMAIL || 'futurfit2@gmail.com';
+const SENDER_EMAIL = process.env.EMAIL_USER || 'futurfit2@gmail.com';
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
@@ -17,12 +23,9 @@ const sendVerificationEmail = async (email, token) => {
     console.log(`📧 Sending verification email to: ${email}`);
     console.log(`🔗 Verification URL: ${verificationUrl}`);
 
-    const msg = {
+    const mailOptions = {
+        from: `"Future-Fit Team" <${SENDER_EMAIL}>`,
         to: email,
-        from: {
-            email: SENDER_EMAIL,
-            name: 'Future-Fit Team'
-        },
         subject: 'Future-Fit: Verify Your Email',
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
@@ -38,7 +41,7 @@ const sendVerificationEmail = async (email, token) => {
         `
     };
 
-    await sgMail.send(msg);
+    await transporter.sendMail(mailOptions);
     console.log(`✅ Verification email sent successfully to ${email}`);
 };
 
@@ -50,12 +53,9 @@ const sendPasswordResetEmail = async (email, token) => {
     console.log(`📧 Sending password reset email to: ${email}`);
     console.log(`🔗 Reset URL: ${resetUrl}`);
 
-    const msg = {
+    const mailOptions = {
+        from: `"Future-Fit Team" <${SENDER_EMAIL}>`,
         to: email,
-        from: {
-            email: SENDER_EMAIL,
-            name: 'Future-Fit Team'
-        },
         subject: 'Future-Fit: Password Reset',
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
@@ -71,18 +71,19 @@ const sendPasswordResetEmail = async (email, token) => {
         `
     };
 
-    await sgMail.send(msg);
-    consSendGrid connection
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Password reset email sent successfully to ${email}`);
+};
+
+// Test Brevo connection
 const verifyConnection = async () => {
-    if (!process.env.SENDGRID_API_KEY) {
-        console.error('❌ SENDGRID_API_KEY not found in environment variables');
-        return false;
-    }
-    
-    console.log('✅ SendGrid API Key configured');
-    console.log(`📧 Sender email: ${SENDER_EMAIL}`);
-    return true; catch (error) {
-        console.error('❌ Email server connection failed:', error.message);
+    try {
+        await transporter.verify();
+        console.log('✅ Brevo email service is ready');
+        console.log(`📧 Sender email: ${SENDER_EMAIL}`);
+        return true;
+    } catch (error) {
+        console.error('❌ Email connection failed:', error.message);
         return false;
     }
 };
