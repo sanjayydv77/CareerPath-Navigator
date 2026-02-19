@@ -16,7 +16,8 @@ const allowedOrigins = [
     'http://localhost:5500',
     'http://localhost:3000',
     'http://127.0.0.1:5500',
-    process.env.FRONTEND_URL // Your Netlify URL
+    'https://futurefit-web.netlify.app', // Netlify frontend
+    process.env.FRONTEND_URL // Dynamic frontend URL from environment
 ].filter(Boolean); // Remove undefined values
 
 app.use(cors({
@@ -24,9 +25,15 @@ app.use(cors({
         // Allow requests with no origin (like mobile apps, Postman, or curl)
         if (!origin) return callback(null, true);
         
-        if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
+        // In production, check against allowedOrigins
+        // In development, allow all origins
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else if (process.env.NODE_ENV !== 'production') {
             callback(null, true);
         } else {
+            console.log(`❌ CORS blocked origin: ${origin}`);
+            console.log(`✅ Allowed origins:`, allowedOrigins);
             callback(new Error('Not allowed by CORS'));
         }
     },
