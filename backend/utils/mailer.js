@@ -1,8 +1,17 @@
-// Resend Email Service - Works with Render (No SMTP blocking)
-const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Elastic Email Service - 100% FREE, 100 emails/day, works with Render
+const nodemailer = require('nodemailer');
 
-const SENDER_EMAIL = 'onboarding@resend.dev'; // Resend's test email (works immediately)
+const transporter = nodemailer.createTransport({
+    host: 'smtp.elasticemail.com',
+    port: 2525,
+    secure: false,
+    auth: {
+        user: process.env.ELASTIC_EMAIL_USER,
+        pass: process.env.ELASTIC_EMAIL_API_KEY
+    }
+});
+
+const SENDER_EMAIL = process.env.ELASTIC_EMAIL_USER;
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
@@ -10,10 +19,9 @@ const sendVerificationEmail = async (email, token) => {
     const verificationUrl = `${backendUrl}/api/auth/verify?token=${token}`;
 
     console.log(`📧 Sending verification email to: ${email}`);
-    console.log(`🔗 Verification URL: ${verificationUrl}`);
 
-    const { data, error } = await resend.emails.send({
-        from: SENDER_EMAIL,
+    await transporter.sendMail({
+        from: `"Future-Fit Team" <${SENDER_EMAIL}>`,
         to: email,
         subject: 'Future-Fit: Verify Your Email',
         html: `
@@ -30,11 +38,7 @@ const sendVerificationEmail = async (email, token) => {
         `
     });
 
-    if (error) {
-        throw new Error(error.message);
-    }
-
-    console.log(`✅ Verification email sent successfully to ${email}`);
+    console.log(`✅ Verification email sent to ${email}`);
 };
 
 // 2. Password Reset Email
@@ -43,10 +47,9 @@ const sendPasswordResetEmail = async (email, token) => {
     const resetUrl = `${frontendUrl}/reset-password.html?token=${token}`;
 
     console.log(`📧 Sending password reset email to: ${email}`);
-    console.log(`🔗 Reset URL: ${resetUrl}`);
 
-    const { data, error } = await resend.emails.send({
-        from: SENDER_EMAIL,
+    await transporter.sendMail({
+        from: `"Future-Fit Team" <${SENDER_EMAIL}>`,
         to: email,
         subject: 'Future-Fit: Password Reset',
         html: `
@@ -63,20 +66,17 @@ const sendPasswordResetEmail = async (email, token) => {
         `
     });
 
-    if (error) {
-        throw new Error(error.message);
-    }
-
-    console.log(`✅ Password reset email sent successfully to ${email}`);
+    console.log(`✅ Password reset email sent to ${email}`);
 };
 
 // Test connection
 const verifyConnection = async () => {
-    if (!process.env.RESEND_API_KEY) {
-        console.error('❌ RESEND_API_KEY not found');
+    if (!process.env.ELASTIC_EMAIL_API_KEY) {
+        console.error('❌ ELASTIC_EMAIL_API_KEY not found');
         return false;
     }
-    console.log('✅ Resend email service configured');
+    console.log('✅ Elastic Email configured');
+    console.log(`📧 Sender: ${SENDER_EMAIL}`);
     return true;
 };
 
