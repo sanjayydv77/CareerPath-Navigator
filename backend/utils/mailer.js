@@ -1,27 +1,8 @@
-// --- 🚀 BREVO (SENDINBLUE) EMAIL SERVICE - TRULY FREE ---
-// 300 emails/day, no credit card required, works perfectly with Render
-const nodemailer = require('nodemailer');
+// Resend Email Service - Works with Render (No SMTP blocking)
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Debug: Log environment variables
-console.log('📧 Email Config Check:');
-console.log('   BREVO_SMTP_USER:', process.env.BREVO_SMTP_USER ? '✅ Set' : '❌ Missing');
-console.log('   BREVO_SMTP_KEY:', process.env.BREVO_SMTP_KEY ? '✅ Set (length: ' + process.env.BREVO_SMTP_KEY.length + ')' : '❌ Missing');
-console.log('   EMAIL_USER:', process.env.EMAIL_USER || 'Not set');
-
-// Brevo SMTP Configuration
-const transporter = nodemailer.createTransport({
-    host: 'smtp-relay.brevo.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.BREVO_SMTP_USER, // Your Brevo login email
-        pass: process.env.BREVO_SMTP_KEY   // Your Brevo SMTP key
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000
-});
-
-const SENDER_EMAIL = process.env.EMAIL_USER || 'futurfit2@gmail.com';
+const SENDER_EMAIL = 'onboarding@resend.dev'; // Resend's test email (works immediately)
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
@@ -31,8 +12,8 @@ const sendVerificationEmail = async (email, token) => {
     console.log(`📧 Sending verification email to: ${email}`);
     console.log(`🔗 Verification URL: ${verificationUrl}`);
 
-    const mailOptions = {
-        from: `"Future-Fit Team" <${SENDER_EMAIL}>`,
+    const { data, error } = await resend.emails.send({
+        from: SENDER_EMAIL,
         to: email,
         subject: 'Future-Fit: Verify Your Email',
         html: `
@@ -47,9 +28,12 @@ const sendVerificationEmail = async (email, token) => {
                 </div>
             </div>
         `
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (error) {
+        throw new Error(error.message);
+    }
+
     console.log(`✅ Verification email sent successfully to ${email}`);
 };
 
@@ -61,8 +45,8 @@ const sendPasswordResetEmail = async (email, token) => {
     console.log(`📧 Sending password reset email to: ${email}`);
     console.log(`🔗 Reset URL: ${resetUrl}`);
 
-    const mailOptions = {
-        from: `"Future-Fit Team" <${SENDER_EMAIL}>`,
+    const { data, error } = await resend.emails.send({
+        from: SENDER_EMAIL,
         to: email,
         subject: 'Future-Fit: Password Reset',
         html: `
@@ -77,23 +61,23 @@ const sendPasswordResetEmail = async (email, token) => {
                 </div>
             </div>
         `
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (error) {
+        throw new Error(error.message);
+    }
+
     console.log(`✅ Password reset email sent successfully to ${email}`);
 };
 
-// Test Brevo connection
+// Test connection
 const verifyConnection = async () => {
-    try {
-        await transporter.verify();
-        console.log('✅ Brevo email service is ready');
-        console.log(`📧 Sender email: ${SENDER_EMAIL}`);
-        return true;
-    } catch (error) {
-        console.error('❌ Email connection failed:', error.message);
+    if (!process.env.RESEND_API_KEY) {
+        console.error('❌ RESEND_API_KEY not found');
         return false;
     }
+    console.log('✅ Resend email service configured');
+    return true;
 };
 
 module.exports = {
