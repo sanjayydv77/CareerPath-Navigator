@@ -11,7 +11,7 @@
 ## Step 1: Create Account (1 minute)
 
 1. Go to: **https://elasticemail.com/account#/create-account**
-2. Enter your email: `sanjuydv5357@gmail.com` (or any email)
+2. Enter your email: `futurfit2@gmail.com`
 3. Create password
 4. Click **Start Free Trial**
 5. Check email and verify
@@ -26,8 +26,8 @@
    - **Account Name**: `futurefit`
 3. Click **Create**
 4. **COPY BOTH**:
-   - **Username**: (your email)
-   - **Password**: (the API key shown - starts with long string)
+   - **Username**: futurfit2@gmail.com
+   - **Password**: (the API key shown - long string)
 
 ---
 
@@ -39,7 +39,7 @@
 4. Add 2 variables:
 
 ```
-ELASTIC_EMAIL_USER = sanjuydv5357@gmail.com
+ELASTIC_EMAIL_USER = futurfit2@gmail.com
 ELASTIC_EMAIL_API_KEY = your_api_key_here
 ```
 
@@ -54,7 +54,7 @@ ELASTIC_EMAIL_API_KEY = your_api_key_here
 ## Step 4: Test
 
 1. Go to: **https://futurefit-web.netlify.app/**
-2. Sign up with ANY email
+2. Sign up with ANY email (like rahulsingh230478@gmail.com)
 3. Email arrives in 2-3 seconds! ⚡
 
 ---
