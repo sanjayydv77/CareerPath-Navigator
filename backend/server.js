@@ -17,23 +17,33 @@ const allowedOrigins = [
     'http://localhost:3000',
     'http://127.0.0.1:5500',
     'https://futurefit-web.netlify.app', // Netlify frontend
+    'https://future-fitt.netlify.app', // Alternative Netlify URL
     process.env.FRONTEND_URL // Dynamic frontend URL from environment
 ].filter(Boolean); // Remove undefined values
 
 app.use(cors({
     origin: function(origin, callback) {
-        // Allow requests with no origin (like mobile apps, Postman, or curl)
-        if (!origin) return callback(null, true);
+        // Log the origin being checked
+        console.log(`🔍 CORS Check - Origin: ${origin}`);
+        console.log(`✅ Allowed origins:`, allowedOrigins);
+        console.log(`🌍 NODE_ENV: ${process.env.NODE_ENV}`);
         
-        // In production, check against allowedOrigins
-        // In development, allow all origins
+        // Allow requests with no origin (like mobile apps, Postman, or curl)
+        if (!origin) {
+            console.log('✅ CORS: Allowing request with no origin');
+            return callback(null, true);
+        }
+        
+        // Check if origin is in allowed list
         if (allowedOrigins.indexOf(origin) !== -1) {
+            console.log(`✅ CORS: Origin ${origin} is allowed`);
             callback(null, true);
         } else if (process.env.NODE_ENV !== 'production') {
+            console.log('✅ CORS: Development mode - allowing all origins');
             callback(null, true);
         } else {
-            console.log(`❌ CORS blocked origin: ${origin}`);
-            console.log(`✅ Allowed origins:`, allowedOrigins);
+            console.log(`❌ CORS BLOCKED - Origin: ${origin}`);
+            console.log(`❌ Allowed origins:`, allowedOrigins);
             callback(new Error('Not allowed by CORS'));
         }
     },
