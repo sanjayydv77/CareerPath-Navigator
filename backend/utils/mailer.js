@@ -1,35 +1,28 @@
-const nodemailer = require('nodemailer');
+// --- 🚀 SENDGRID EMAIL SERVICE (PRODUCTION-READY) ---
+// SendGrid is reliable with cloud hosting providers (Render, Heroku, etc.)
+// No SMTP timeouts, fast delivery, 100 free emails/day
+const sgMail = require('@sendgrid/mail');
 
-// --- 🚀 ENHANCED GMAIL CONFIGURATION WITH TIMEOUT HANDLING ---
-// Using explicit SMTP configuration for better control on production servers
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        rejectUnauthorized: false // Allow self-signed certificates
-    },
-    connectionTimeout: 10000, // 10 seconds
-    greetingTimeout: 10000,
-    socketTimeout: 15000
-});
+// Set SendGrid API Key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// Sender email (must be verified in SendGrid)
+const SENDER_EMAIL = process.env.SENDGRID_SENDER_EMAIL || 'futurfit2@gmail.com';
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
-    // Use environment variable for backend URL, fallback to localhost for development
     const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
     const verificationUrl = `${backendUrl}/api/auth/verify?token=${token}`;
 
-    console.log(`📧 NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`📧 Sending verification email to: ${email}`);
     console.log(`🔗 Verification URL: ${verificationUrl}`);
 
-    const mailOptions = {
-        from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
+    const msg = {
         to: email,
+        from: {
+            email: SENDER_EMAIL,
+            name: 'Future-Fit Team'
+        },
         subject: 'Future-Fit: Verify Your Email',
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
@@ -45,24 +38,24 @@ const sendVerificationEmail = async (email, token) => {
         `
     };
 
-    console.log(`🔹 Sending verification email to: ${email}...`);
-    // We use 'await' because 3 seconds is fast enough to wait for
-    await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent successfully!`);
+    await sgMail.send(msg);
+    console.log(`✅ Verification email sent successfully to ${email}`);
 };
 
 // 2. Password Reset Email
 const sendPasswordResetEmail = async (email, token) => {
-    // Use environment variable for frontend URL, fallback to localhost for development
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
     const resetUrl = `${frontendUrl}/reset-password.html?token=${token}`;
 
-    console.log(`📧 NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`📧 Sending password reset email to: ${email}`);
     console.log(`🔗 Reset URL: ${resetUrl}`);
 
-    const mailOptions = {
-        from: `"Future-Fit Team" <${process.env.EMAIL_USER}>`,
+    const msg = {
         to: email,
+        from: {
+            email: SENDER_EMAIL,
+            name: 'Future-Fit Team'
+        },
         subject: 'Future-Fit: Password Reset',
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
@@ -72,22 +65,23 @@ const sendPasswordResetEmail = async (email, token) => {
                     <div style="text-align: center; margin: 30px 0;">
                         <a href="${resetUrl}" style="background-color: #e74c3c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px;">Reset Password</a>
                     </div>
+                    <p style="color: #999; font-size: 12px; text-align: center;">This link will expire in 1 hour.</p>
                 </div>
             </div>
         `
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log(`✅ Password reset email sent to ${email}`);
-};
-
-// Test email connection
+    await sgMail.send(msg);
+    consSendGrid connection
 const verifyConnection = async () => {
-    try {
-        await transporter.verify();
-        console.log('✅ Email server is ready to send messages');
-        return true;
-    } catch (error) {
+    if (!process.env.SENDGRID_API_KEY) {
+        console.error('❌ SENDGRID_API_KEY not found in environment variables');
+        return false;
+    }
+    
+    console.log('✅ SendGrid API Key configured');
+    console.log(`📧 Sender email: ${SENDER_EMAIL}`);
+    return true; catch (error) {
         console.error('❌ Email server connection failed:', error.message);
         return false;
     }
