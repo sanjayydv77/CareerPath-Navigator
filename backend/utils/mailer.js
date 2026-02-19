@@ -1,13 +1,21 @@
 const nodemailer = require('nodemailer');
 
-// --- 🚀 TESTED & VERIFIED GMAIL CONFIGURATION ---
-// This uses the standard service configuration which proved to work in 3.3 seconds.
+// --- 🚀 ENHANCED GMAIL CONFIGURATION WITH TIMEOUT HANDLING ---
+// Using explicit SMTP configuration for better control on production servers
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    tls: {
+        rejectUnauthorized: false // Allow self-signed certificates
+    },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,
+    socketTimeout: 15000
 });
 
 // 1. Verification Email
@@ -73,7 +81,20 @@ const sendPasswordResetEmail = async (email, token) => {
     console.log(`✅ Password reset email sent to ${email}`);
 };
 
+// Test email connection
+const verifyConnection = async () => {
+    try {
+        await transporter.verify();
+        console.log('✅ Email server is ready to send messages');
+        return true;
+    } catch (error) {
+        console.error('❌ Email server connection failed:', error.message);
+        return false;
+    }
+};
+
 module.exports = {
     sendVerificationEmail,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    verifyConnection
 };
