@@ -1,7 +1,9 @@
 # Netlify Configuration for Future-Fit Frontend
 [build]
   # No build command needed for static HTML site
+  base = ""
   publish = "."
+  command = ""
   
 [build.environment]
   NODE_VERSION = "18"
