@@ -1,6 +1,6 @@
 # Netlify Configuration for Future-Fit Frontend
 [build]
-  # No build command needed for static HTML site
+  # Explicitly set base and publish directories
   base = ""
   publish = "."
   command = ""
@@ -8,26 +8,9 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# Redirect rules
-[[redirects]]
-  from = "/api/*"
-  to = "https://future-fit-backend-bgp9.onrender.com/api/:splat"
-  status = 200
-  force = false
-  
-# SPA fallback (optional, for future use if converting to SPA)
+# Redirect all 404s to index.html for SPA behavior
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = false
-  conditions = {Role = ["guest"]}
-
-# Headers for security
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
