@@ -2,6 +2,12 @@
 // 300 emails/day, no credit card required, works perfectly with Render
 const nodemailer = require('nodemailer');
 
+// Debug: Log environment variables
+console.log('📧 Email Config Check:');
+console.log('   BREVO_SMTP_USER:', process.env.BREVO_SMTP_USER ? '✅ Set' : '❌ Missing');
+console.log('   BREVO_SMTP_KEY:', process.env.BREVO_SMTP_KEY ? '✅ Set (length: ' + process.env.BREVO_SMTP_KEY.length + ')' : '❌ Missing');
+console.log('   EMAIL_USER:', process.env.EMAIL_USER || 'Not set');
+
 // Brevo SMTP Configuration
 const transporter = nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
@@ -10,7 +16,9 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: process.env.BREVO_SMTP_USER, // Your Brevo login email
         pass: process.env.BREVO_SMTP_KEY   // Your Brevo SMTP key
-    }
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000
 });
 
 const SENDER_EMAIL = process.env.EMAIL_USER || 'futurfit2@gmail.com';
