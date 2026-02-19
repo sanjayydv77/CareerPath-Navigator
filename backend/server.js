@@ -55,12 +55,7 @@ app.use(express.json());
 
 // --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log('✅ MongoDB connected successfully.');
-        // Test email connection
-        const { verifyConnection } = require('./utils/mailer');
-        verifyConnection();
-    })
+    .then(() => console.log('✅ MongoDB connected successfully.'))
     .catch(err => console.error('❌ DB Connection Error:', err));
 
 // --- Routes ---

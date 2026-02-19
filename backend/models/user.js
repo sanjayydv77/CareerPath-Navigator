@@ -1,5 +1,3 @@
-// models/User.js (Complete File - With Growth Dashboard Fields)
-
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
@@ -23,27 +21,7 @@ const UserSchema = new mongoose.Schema({
         enum: ['student', 'counsellor', 'parent'] 
     },
     
-    // --- Email Verification Fields ---
-    isVerified: { 
-        type: Boolean, 
-        default: false 
-    },
-    verificationToken: { 
-        type: String 
-    }, 
-    
-    // --- Password Reset Fields ---
-    passwordResetToken: {
-        type: String
-    },
-    passwordResetExpires: {
-        type: Date
-    },
-    
-    // --- Initial Data Recording ---
-    schoolId: { 
-        type: String 
-    },
+    // --- Registration Date ---
     registeredAt: { 
         type: Date, 
         default: Date.now 
