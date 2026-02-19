@@ -279,7 +279,10 @@
 
         try {
             // Save the job title to the user's dashboard via API
-            const response = await fetch('http://localhost:5000/api/data/apply-job', {
+            const API_URL = window.location.hostname === 'localhost' 
+                ? 'http://localhost:5000/api' 
+                : 'https://future-fit-backend-jil4.onrender.com/api';
+            const response = await fetch(`${API_URL}/data/apply-job`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

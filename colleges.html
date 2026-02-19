@@ -1375,7 +1375,10 @@
     // --- ⭐ NEW: Function to get saved colleges from DB ---
     async function fetchSavedColleges() {
         try {
-            const response = await fetch('http://localhost:5000/api/data/dashboard', {
+            const API_URL = window.location.hostname === 'localhost' 
+                ? 'http://localhost:5000/api' 
+                : 'https://future-fit-backend-jil4.onrender.com/api';
+            const response = await fetch(`${API_URL}/data/dashboard`, {
                 headers: { 'x-auth-token': token }
             });
             if (response.ok) {
@@ -1584,7 +1587,10 @@
         // 4. Send the update to the backend
         try {
             // Note: We send the collegeName and the 'isSaving' status
-            const response = await fetch('http://localhost:5000/api/data/save-college', {
+            const API_URL = window.location.hostname === 'localhost' 
+                ? 'http://localhost:5000/api' 
+                : 'https://future-fit-backend-jil4.onrender.com/api';
+            const response = await fetch(`${API_URL}/data/save-college`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

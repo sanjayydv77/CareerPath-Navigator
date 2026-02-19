@@ -160,7 +160,10 @@
 
         async function fetchDashboardData() {
             try {
-                const response = await fetch('http://localhost:5000/api/data/dashboard', {
+                const API_URL = window.location.hostname === 'localhost' 
+                    ? 'http://localhost:5000/api' 
+                    : 'https://future-fit-backend-jil4.onrender.com/api';
+                const response = await fetch(`${API_URL}/data/dashboard`, {
                     headers: {
                         'x-auth-token': token // Send our login token
                     }

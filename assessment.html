@@ -720,7 +720,10 @@
                     percentage: r.percentage
                 }));
 
-                const response = await fetch('http://localhost:5000/api/data/save-assessment', {
+                const API_URL = window.location.hostname === 'localhost' 
+                    ? 'http://localhost:5000/api' 
+                    : 'https://future-fit-backend-jil4.onrender.com/api';
+                const response = await fetch(`${API_URL}/data/save-assessment`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
