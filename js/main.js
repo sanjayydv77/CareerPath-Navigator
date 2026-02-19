@@ -4,7 +4,7 @@
 // Automatically detect environment and set API URL
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:5000/api'
-    : 'https://future-fit-backend-bgp9.onrender.com/api';
+    : 'https://future-fit-backend-jil4.onrender.com/api';  // Updated to current backend
 
 // DOM Elements
 const loginModal = document.getElementById('loginModal');
