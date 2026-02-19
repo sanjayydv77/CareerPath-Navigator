@@ -43,12 +43,16 @@ mongoose.connect(process.env.MONGO_URI)
 
 // --- Routes ---
 app.get('/', (req, res) => {
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
+    
     res.json({
         status: 'Career Counseling API Running...',
-        version: '2.0-PRODUCTION-URLS',
+        version: '3.0-DYNAMIC-URLS',
         timestamp: new Date().toISOString(),
-        verificationUrl: 'https://future-fit-backend-bgp9.onrender.com/api/auth/verify',
-        resetUrl: 'https://future-fit.netlify.app/reset-password.html'
+        environment: process.env.NODE_ENV || 'development',
+        verificationUrl: `${backendUrl}/api/auth/verify`,
+        resetUrl: `${frontendUrl}/reset-password.html`
     });
 });
 

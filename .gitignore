@@ -41,4 +41,3 @@ logs
 # Future backend files (when we add them)
 config/
 uploads/
-.env.example

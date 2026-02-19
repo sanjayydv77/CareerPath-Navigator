@@ -159,8 +159,8 @@ router.get('/verify', async (req, res) => {
         user.verificationToken = undefined;
         await user.save();
 
-        // Redirect to frontend after verification - Always use Netlify
-        const frontendUrl = 'https://future-fit.netlify.app';
+        // Redirect to frontend after verification - Use environment variable
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
         console.log(`✅ User verified! Redirecting to: ${frontendUrl}`);
         res.redirect(`${frontendUrl}/index.html?verified=true`);
 

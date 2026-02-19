@@ -12,8 +12,8 @@ const transporter = nodemailer.createTransport({
 
 // 1. Verification Email
 const sendVerificationEmail = async (email, token) => {
-    // Always use production URLs - Render deployment
-    const backendUrl = 'https://future-fit-backend-bgp9.onrender.com';
+    // Use environment variable for backend URL, fallback to localhost for development
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
     const verificationUrl = `${backendUrl}/api/auth/verify?token=${token}`;
 
     console.log(`📧 NODE_ENV: ${process.env.NODE_ENV}`);
@@ -45,8 +45,8 @@ const sendVerificationEmail = async (email, token) => {
 
 // 2. Password Reset Email
 const sendPasswordResetEmail = async (email, token) => {
-    // Always use production URLs - Netlify deployment
-    const frontendUrl = 'https://future-fit.netlify.app';
+    // Use environment variable for frontend URL, fallback to localhost for development
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
     const resetUrl = `${frontendUrl}/reset-password.html?token=${token}`;
 
     console.log(`📧 NODE_ENV: ${process.env.NODE_ENV}`);

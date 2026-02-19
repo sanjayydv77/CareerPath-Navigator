@@ -1,4 +1,4 @@
-# 🚀 CareerPath Navigator
+# 🚀 Future-Fit | CareerPath Navigator
 
 **Full Stack Career Counseling Platform**
 
@@ -8,7 +8,7 @@ Developed by **Sanjay Yadav** | Student & Aspiring Full Stack Developer | Indore
 
 ## 📋 Project Overview
 
-CareerPath Navigator is a comprehensive career counseling platform designed to guide professionals and students in their career journey. As a Full Stack Developer, I've built this platform to provide personalized career guidance, skill assessments, and educational resources.
+Future-Fit (CareerPath Navigator) is a comprehensive full-stack career counseling platform designed to guide professionals and students in their career journey. Built with modern web technologies, this platform provides personalized career guidance, skill assessments, educational resources, and user authentication.
 
 ## ✨ Features
 
@@ -46,6 +46,15 @@ CareerPath Navigator is a comprehensive career counseling platform designed to g
 - **Font Awesome** - Professional icons
 - **Google Fonts** - Typography
 
+### **Backend:**
+- **Node.js** - JavaScript runtime environment
+- **Express.js** - Web application framework
+- **MongoDB Atlas** - Cloud database
+- **Mongoose** - MongoDB object modeling
+- **JWT** - Secure authentication
+- **Nodemailer** - Email functionality
+- **bcrypt.js** - Password hashing
+
 ### **Design Features:**
 - **Responsive Web Design** - Mobile, Tablet, Desktop
 - **CSS Animations** - Smooth transitions and effects
@@ -55,43 +64,96 @@ CareerPath Navigator is a comprehensive career counseling platform designed to g
 ## 📁 Project Structure
 
 ```
-CareerPath-Navigator/
-├── index.html          # Main HTML file
+Future-Fit/
+├── index.html              # Main landing page
+├── assessment.html         # Career assessment page
+├── colleges.html           # College information
+├── jobs.html              # Job listings
+├── streams.html           # Career streams
+├── mentorship.html        # Mentorship program
+├── growth.html            # Growth tracking
+├── reset-password.html    # Password reset page
 ├── css/
-│   └── styles.css      # Complete CSS styling
+│   └── styles.css         # Complete CSS styling
 ├── js/
-│   └── main.js         # JavaScript functionality
-├── images/
-│   └── profile.jpg.png # Developer profile picture
-├── README.md           # Project documentation
-└── .gitignore          # Git ignore file
+│   ├── main.js           # Frontend JavaScript
+│   └── config.js         # API configuration
+├── images/               # Image assets
+├── backend/
+│   ├── server.js         # Express server
+│   ├── package.json      # Backend dependencies
+│   ├── .env             # Environment variables (not in git)
+│   ├── .env.example     # Environment template
+│   ├── routes/          # API routes
+│   │   ├── auth.js      # Authentication routes
+│   │   └── data.js      # Data routes
+│   ├── models/          # Database models
+│   │   └── user.js      # User model
+│   ├── middleware/      # Custom middleware
+│   │   └── auth.js      # Auth middleware
+│   └── utils/           # Utility functions
+│       └── mailer.js    # Email utilities
+├── netlify.toml         # Netlify configuration
+├── DEPLOY_GUIDE.md      # Deployment instructions
+└── README.md            # This file
 ```
 
 ## 🚀 Getting Started
 
 ### **Prerequisites:**
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Text editor (VS Code recommended)
-- Git installed on your system
+- **Node.js** (v18 or higher) - [Download here](https://nodejs.org/)
+- **MongoDB Atlas Account** (or local MongoDB)
+- **Git** - Version control
+- **VS Code** (recommended) - Code editor
 
-### **Installation:**
+### **Local Development Setup:**
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/sanjayydv77/CareerPath-Navigator.git
+git clone https://github.com/YOUR_USERNAME/future-fit-app.git
+cd future-fit-app
 ```
 
-2. **Navigate to project directory:**
+2. **Backend Setup:**
 ```bash
-cd CareerPath-Navigator
+# Navigate to backend folder
+cd backend
+
+# Install dependencies
+npm install
+
+# Create .env file from template
+cp .env.example .env
+
+# Edit .env file with your credentials
+# (MongoDB URI, JWT secret, email credentials)
+
+# Start backend server
+npm start
 ```
 
-3. **Open in VS Code:**
+Backend will run on `http://localhost:5000`
+
+3. **Frontend Setup:**
 ```bash
-code .
+# Open another terminal in project root
+# Use Live Server extension in VS Code, or
+# Simply open index.html in your browser
+
+# For development with Live Server:
+# Right-click index.html → "Open with Live Server"
 ```
 
-4. **Open index.html in browser or use Live Server extension**
+Frontend will run on `http://localhost:5500` (or your Live Server port)
+
+4. **Test the application:**
+- Open browser at `http://localhost:5500`
+- Try registering a new account
+- Check backend logs for database connection
+- Test login/logout functionality
+
+### **📖 For Full Deployment Instructions:**
+See [DEPLOY_GUIDE.md](DEPLOY_GUIDE.md) for step-by-step deployment to Render (backend) and Netlify (frontend).
 
 ## 📱 Responsive Design
 
@@ -127,15 +189,25 @@ This project is developed as part of my **Final Year B.Tech Project** in Compute
 - **User Experience Design**
 - **Professional Code Organization**
 
+## ✅ Implemented Features
+
+- ✅ **Backend Integration** (Node.js, Express.js)
+- ✅ **Database Integration** (MongoDB Atlas)
+- ✅ **User Authentication** (JWT-based)
+- ✅ **Email Verification** (Nodemailer)
+- ✅ **Password Reset** functionality
+- ✅ **Protected Routes** and middleware
+- ✅ **CORS Configuration** for production
+
 ## 🚀 Future Enhancements
 
-- **Backend Integration** (Node.js, Express.js)
-- **Database Integration** (MongoDB/MySQL)
-- **User Dashboard** and profile management
-- **Career Assessment Tools** and quizzes
-- **Real-time Chat Support**
+- **User Dashboard** with personalized content
+- **Career Assessment Tools** and AI-powered quizzes
+- **Real-time Chat Support** with counselors
 - **Admin Panel** for content management
 - **Payment Integration** for premium features
+- **Push Notifications** for important updates
+- **Mobile App** (React Native)
 
 ## 📞 Contact & Support
 
