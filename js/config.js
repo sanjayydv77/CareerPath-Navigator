@@ -7,5 +7,5 @@ const config = {
     // Automatically detect environment
     API_BASE_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:5000'
-        : 'https://future-fit-backend-bgp9.onrender.com'
+        : 'https://future-fit-backend-jil4.onrender.com'
 };
