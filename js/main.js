@@ -1,4 +1,4 @@
-// CareerPath Navigator - Main Logic
+// Future-Fit - Main Logic
 // Connects Frontend to Node.js/MongoDB Backend
 
 // Automatically detect environment and set API URL

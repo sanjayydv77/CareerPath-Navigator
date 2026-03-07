@@ -1,4 +1,4 @@
-# 🚀 Future-Fit | CareerPath Navigator
+# 🚀 Future-Fit
 
 **Full Stack Career Counseling Platform**
 
@@ -8,7 +8,7 @@ Developed by **Sanjay Yadav** | Student & Aspiring Full Stack Developer | Indore
 
 ## 📋 Project Overview
 
-Future-Fit (CareerPath Navigator) is a comprehensive full-stack career counseling platform designed to guide professionals and students in their career journey. Built with modern web technologies, this platform provides personalized career guidance, skill assessments, educational resources, and user authentication.
+Future-Fit is a comprehensive full-stack career counseling platform designed to guide professionals and students in their career journey. Built with modern web technologies, this platform provides personalized career guidance, skill assessments, educational resources, and user authentication.
 
 ## ✨ Features
 
@@ -221,4 +221,4 @@ For any queries or suggestions regarding this project:
 
 ⭐ **If you found this project helpful, please give it a star!** ⭐
 
-**© 2024 CareerPath Navigator. Developed with ❤️ by Sanjay Yadav | Full Stack Developer | Indore, M.P.**
+**© 2024 Future-Fit. Developed with ❤️ by Sanjay Yadav | Full Stack Developer | Indore, M.P.**
